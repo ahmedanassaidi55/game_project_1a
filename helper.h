@@ -17,8 +17,8 @@ typedef struct button{
 	
 }button;
 //definition des variables globaux
-SDL_Window *window;
-SDL_Renderer *renderer;
+extern SDL_Window *window;
+extern SDL_Renderer *renderer;
 
 //definition des fonctions 'helper'
 int init_game(SDL_Window *window,SDL_Renderer *renderer);
