@@ -1,6 +1,6 @@
 #include "helper.h"
 
-int init_game(SDL_Window *window,SDL_Renderer *renderer){
+int init_game(){
 	window = NULL;
 	renderer = NULL;
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
@@ -39,8 +39,21 @@ int init_game(SDL_Window *window,SDL_Renderer *renderer){
     	}
 	return 0;
 }
-
-void exit_game(SDL_Window *window,SDL_Renderer *renderer){
+void init_main_menu(SDL_Renderer *renderer){
+	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+	if(!temp_surf){
+		printf("error creating surface.\n");
+		return;
+	}
+	main_menu.background =SDL_CreateTextureFromSurface(renderer,temp_surf);
+	SDL_FreeSurface(temp_surf);
+	main_menu.position.x = 0;
+	main_menu.position.y = 0;
+	main_menu.position.w = 600;
+	main_menu.position.h = 358;
+	
+}
+void exit_game(){
     	TTF_Quit();
     	IMG_Quit();
     	Mix_CloseAudio();

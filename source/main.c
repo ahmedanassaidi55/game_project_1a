@@ -3,6 +3,7 @@
 int main(){
 	TTF_Font game_font = NULL;
 	SDL_Event event;
+	int running =1;
 	if(init_game()){
 		return 1;
 	};
@@ -11,9 +12,16 @@ int main(){
 		printf("font access error\n");
 		return 1;
 	}
-	int running =1;
 	while (running){
-		main_menu(renderer,game_font);
+		while(SDL_PollEvent(&event)){
+			if(event.type == SDL_QUIT){
+			running =0;
+			}
+			if(event.type ==SDL_MOUSEBUTTONDOWN){
+				
+			}
+		}
+		main_menu(renderer);
 		
 	}
 	exit_game();

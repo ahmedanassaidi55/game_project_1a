@@ -31,9 +31,11 @@ struct menu{
 //definition des variables globaux
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
+struct menu main_menu;
+int main_menu_init = 0;
 //definition des fonctions 'helper'
-int init_game(SDL_Window *window,SDL_Renderer *renderer);
-void exit_game(SDL_Window *window,SDL_Renderer *renderer);
+int init_game();
+void exit_game();
 void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y);
 void switch_menu(enum menu goto_menu);
 void main_menu(SDL_Renderer *renderer);
