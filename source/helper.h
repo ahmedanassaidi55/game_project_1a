@@ -25,4 +25,11 @@ int init_game(SDL_Window *window,SDL_Renderer *renderer);
 void exit_game(SDL_Window *window,SDL_Renderer *renderer);
 void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y);
 void switch_menu(enum menu goto_menu);
-
+void main_menu(SDL_Renderer *renderer);
+void display_anim(SDL_Renderer *renderer);
+void play_menu(SDL_Renderer *renderer);
+void settings_menu(SDL_Renderer *renderer);
+void save_menu(SDL_Renderer *renderer);
+void highscores_menu(SDL_Renderer *renderer);
+void character_menu(SDL_Renderer *renderer);
+void exit_anim(SDL_Renderer *renderer);
