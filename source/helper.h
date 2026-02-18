@@ -5,8 +5,10 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 //definiton des macros
-
-
+#define MAX_BUTTON_COUNT 8
+#define MAX_ELEM_COUNT 5
+#define DARK_GREY 105,105,105,255
+#define DARK_GREY 200,200,200,255
 //definition des types
 enum menu {play,settings,save,highscores,character,back,exitgame};
 typedef struct button{
@@ -16,10 +18,19 @@ typedef struct button{
 	enum menu type_menu;
 	
 }button;
+typedef struct element{
+	SDL_Texture *texture;
+	SDL_Rect position;
+};
+struct menu{
+	SDL_Texture *background;
+	SDL_Rect position;
+	element elements[MAX_ELEM_COUNT];
+	button buttons[MAX_BUTTON_COUNT];
+};
 //definition des variables globaux
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-
 //definition des fonctions 'helper'
 int init_game(SDL_Window *window,SDL_Renderer *renderer);
 void exit_game(SDL_Window *window,SDL_Renderer *renderer);
