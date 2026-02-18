@@ -1,5 +1,7 @@
 #include "helper.h"
 
+//initialiser le jeu 
+
 int init_game(){
 	window = NULL;
 	renderer = NULL;
@@ -45,6 +47,10 @@ void init_main_menu(SDL_Renderer *renderer){
 		printf("error creating surface.\n");
 		return;
 	}
+	strcpy(main_menu.buttons[0].label,);
+	strcpy(main_menu.buttons[1].label,);
+	strcpy(main_menu.buttons[2].label,);
+	strcpy(main_menu.buttons[3].label,);
 	main_menu.background =SDL_CreateTextureFromSurface(renderer,temp_surf);
 	SDL_FreeSurface(temp_surf);
 	main_menu.position.x = 0;
@@ -53,6 +59,9 @@ void init_main_menu(SDL_Renderer *renderer){
 	main_menu.position.h = 358;
 	
 }
+
+//quitter le jeu et nettoyer la memoire occupée
+
 void exit_game(){
     	TTF_Quit();
     	IMG_Quit();
@@ -61,38 +70,47 @@ void exit_game(){
     	SDL_DestroyWindow(window);
     	SDL_Quit();
 }
+
+//changement de menu
+
 void switch_menu(enum menu goto_menu){
 	switch(goto_menu){
 		case play:
-			display_anim();
-			play_menu();
+			display_anim(renderer);
+			play_menu(renderer);
 			break;
 		case settings:
-			display_anim();
-			settings_menu();
+			display_anim(renderer);
+			settings_menu(renderer);
 			break;
 		case save:
-			display_anim();
-			save_menu();
+			display_anim(renderer);
+			save_menu(renderer);
 			break;
 		case highscores:
-			display_anim();
-			highscores_menu();
+			display_anim(renderer);
+			highscores_menu(renderer);
 			break;
 		case character:
-			display_anim();
-			character_menu();
+			display_anim(renderer);
+			character_menu(renderer);
 			break;
+		case enigma:
+			display_anim(renderer);
+			enigma_menu(renderer);
 		case back:
-			display_anim();
-			main_menu();
+			display_anim(renderer);
+			main_menu(renderer);
 			break;
 		case exitgame:
-			exit_anim();
+			exit_anim(renderer);
 			exit_game(window,renderer);
 			break;
 	}
 }
+
+//detection du bouton appui
+
 void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y){
 	button *pB;
 	SDL_Point p={mouse_x,mouse_y};

@@ -22,8 +22,28 @@ int main(){
 			}
 		}
 		main_menu(renderer);
-		
 	}
 	exit_game();
 	return 0;
+}
+
+//animation lors de changement de menu
+
+void display_anim(SDL_Renderer *renderer){
+	char path[64];
+	for(int i = 11;i >=1;i--){
+		sprintf(path,"assets/frame_%02d.jpg",i);
+		SDL_Surface *curr_frame = IMG_load(path);
+		if(!surf){
+			printf("error loading %s",path);
+			return;
+		}
+		SDL_Texture *curr_texture = SDL_CreateTextureFromSurface(curr_frame);
+		SDL_FreeSurface(curr_frame);
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer,curr_texture,NULL,NULL);
+		SDL_RenderPresent(renderer);
+		SDL_DestroyTexture(curr_texture);
+		SDL_Delay(10);
+	}
 }

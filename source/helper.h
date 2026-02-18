@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -10,7 +11,7 @@
 #define DARK_GREY 105,105,105,255
 #define DARK_GREY 200,200,200,255
 //definition des types
-enum menu {play,settings,save,highscores,character,back,exitgame};
+enum menu {play,settings,save,highscores,character,enigma,back,exitgame};
 typedef struct button{
 	SDL_Texture *texture;
 	SDL_Rect position;
@@ -36,6 +37,7 @@ int main_menu_init = 0;
 //definition des fonctions 'helper'
 int init_game();
 void exit_game();
+void init_main_menu(SDL_Renderer *renderer)
 void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y);
 void switch_menu(enum menu goto_menu);
 void main_menu(SDL_Renderer *renderer);
@@ -45,4 +47,5 @@ void settings_menu(SDL_Renderer *renderer);
 void save_menu(SDL_Renderer *renderer);
 void highscores_menu(SDL_Renderer *renderer);
 void character_menu(SDL_Renderer *renderer);
+void enigma_menu(SDL_Renderer *renderer);
 void exit_anim(SDL_Renderer *renderer);
