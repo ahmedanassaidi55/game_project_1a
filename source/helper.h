@@ -16,7 +16,7 @@ typedef struct {
     int score;
 } Score;
 enum menu {play,settings,save,highscores,character,enigma,back,exitgame,mono,multi,confirm};
-enum element{character,icon,text};
+enum element_type{character_icon,icon,text};
 typedef struct button{
 	SDL_Texture *texture;
 	SDL_Rect position;

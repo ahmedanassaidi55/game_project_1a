@@ -144,7 +144,7 @@ void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer){
 			break;
 		case character:
 			//display_anim(renderer);
-			character_menu(renderer,font);
+			//character_menu(renderer,font);
 			break;
 		case enigma:
 			//display_anim(renderer);
@@ -210,7 +210,7 @@ void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
 	Score list[6] = {{"Ahmed", 1500}, {"Sami", 1200}, {"Amira", 900},{"Ali",750},{"Khaled",500},{"Wissem",400}};
 	SDL_Color white = {255, 255, 255, 255};
 	char buffer[100];
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 6; i++) {
        		sprintf(buffer, "%d. %s : %d", i+1, list[i].name, list[i].score);
        	SDL_Surface* surface = TTF_RenderText_Solid(font, buffer, white);
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -220,10 +220,9 @@ void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
         SDL_FreeSurface(surface);
         SDL_DestroyTexture(texture);
         }
-        
 }
 
-void character_menu(SDL_Renderer *renderer,TTF_Font *font)
+/*void character_menu(SDL_Renderer *renderer,TTF_Font *font)
 {
     struct menu_t character_menu;
     SDL_Surface *surf=IMG_Load("assets/frame_01.jpg");
@@ -260,11 +259,11 @@ void character_menu(SDL_Renderer *renderer,TTF_Font *font)
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
-                return;
+                r;
 
             if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                SDL_Point p = {event.button.x,event.button.y};
+                SDL_Point p = {event.motion.x,event.motion.y};
 
                 // Choix mode
                 if (SDL_PointInRect(&p, &monoBtn))
@@ -362,7 +361,7 @@ void character_menu(SDL_Renderer *renderer,TTF_Font *font)
 
         SDL_RenderPresent(renderer);
     }
-}
+}*/
 /*
 void enigma_menu(SDL_Renderer *renderer,TTF_Font *font){
 	
