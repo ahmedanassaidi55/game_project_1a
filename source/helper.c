@@ -174,12 +174,12 @@ void display_anim(SDL_Renderer *renderer){
 	char path[64];
 	for(int i = 11;i >=1;i--){
 		sprintf(path,"assets/frame_%02d.jpg",i);
-		SDL_Surface *curr_frame = IMG_load(path);
-		if(!surf){
+		SDL_Surface *curr_frame = IMG_Load(path);
+		if(!curr_frame){
 			printf("error loading %s",path);
 			return;
 		}
-		SDL_Texture *curr_texture = SDL_CreateTextureFromSurface(curr_frame);
+		SDL_Texture *curr_texture = SDL_CreateTextureFromSurface(renderer,curr_frame);
 		SDL_FreeSurface(curr_frame);
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer,curr_texture,NULL,NULL);
