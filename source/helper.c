@@ -69,14 +69,17 @@ void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
 	mainMenu.position.y = 0;
 	mainMenu.position.w = 600;
 	mainMenu.position.h = 358;
-	for(int i=0; i<5;i++){
-		mainMenu.buttons[i].position.x=120;
-		mainMenu.buttons[i].position.y=90+i*30;
-		mainMenu.buttons[i].position.h=24;
-		mainMenu.buttons[i].position.w=160;
+	for(int i=0; i<7;i++){
+		
 		SDL_Surface *button_surface=TTF_RenderText_Blended(font,
 				mainMenu.buttons[i].label,DARK_GREY);
-		mainMenu.buttons[i].texture=SDL_CreateTextureFromSurface(renderer,button_surface);
+	mainMenu.buttons[i].texture=SDL_CreateTextureFromSurface(renderer,
+							button_surface);
+		mainMenu.buttons[i].position.x=120;
+		mainMenu.buttons[i].position.y=90+i*30;
+		mainMenu.buttons[i].position.h=button_surface->h;
+		mainMenu.buttons[i].position.w=button_surface->w>160?160:button_surface->w;
+
 		SDL_FreeSurface(button_surface);
 	}
 	
@@ -141,7 +144,7 @@ void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer){
 			break;
 		case character:
 			display_anim(renderer);
-			//character_menu(renderer,font);
+			character_menu(renderer,font);
 			break;
 		case enigma:
 			display_anim(renderer);
@@ -216,10 +219,137 @@ void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
         }
         
 }
-/*
-void character_menu(SDL_Renderer *renderer,TTF_Font *font){
-	
+
+void character_menu(SDL_Renderer *renderer,TTF_Font *font)
+{
+    int running = 1;
+    int mode = 0;           // 0 = rien | 1 = mono | 2 = multi
+    int avatarChoice = 0;   // 0 = rien | 1 = avatar1 | 2 = avatar2
+
+    SDL_Event event;
+
+    // ----------- Boutons principaux -----------
+    SDL_Rect monoBtn   = {200, 200, 150, 50};
+    SDL_Rect multiBtn  = {450, 200, 150, 50};
+    SDL_Rect retourBtn = {350, 520, 120, 50};
+
+    // ----------- Partie avatar -----------
+    SDL_Rect avatar1 = {200, 320, 120, 50};
+    SDL_Rect avatar2 = {450, 320, 120, 50};
+    SDL_Rect valider = {350, 420, 120, 50};
+
+    while (running)
+    {
+        // ========================
+        // GESTION EVENTS
+        // ========================
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_QUIT)
+                return;
+
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                SDL_Point p = {event.button.x,event.button.y};
+
+                // Choix mode
+                if (SDL_PointInRect(&p, &monoBtn))
+                {
+                    mode = 1;
+                    avatarChoice = 0; // reset avatar
+                }
+
+                if (SDL_PointInRect(&p, &multiBtn))
+                {
+                    mode = 2;
+                    avatarChoice = 0;
+                }
+
+                // Choix avatar
+                if (mode != 0)
+                {
+                    if (SDL_PointInRect(&p, &avatar1))
+                        avatarChoice = 1;
+
+                    if (SDL_PointInRect(&p, &avatar2))
+                        avatarChoice = 2;
+                }
+
+                // Valider
+                if (mode != 0 && avatarChoice != 0 &&
+                    SDL_PointInRect(&p, &valider))
+                {
+                    printf("Mode: %d | Avatar: %d\n",
+                           mode, avatarChoice);
+                    printf("Go to best scores menu\n");
+                }
+
+                // Retour
+                if (SDL_PointInRect(&p, &retourBtn)){
+                    display_anim(renderer);
+                    main_menu(renderer,font);}
+                    
+            }
+
+            // Touche ENTER
+            if (event.type == SDL_KEYDOWN)
+            {
+                if (event.key.keysym.sym == SDLK_RETURN &&
+                    mode != 0 && avatarChoice != 0)
+                {
+                    printf("Mode: %d | Avatar: %d\n",
+                           mode, avatarChoice);
+                    printf("Go to best scores menu (ENTER)\n");
+                }
+            }
+        }
+
+        // ========================
+        // RENDER
+        // ========================
+        SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255);
+        SDL_RenderClear(renderer);
+
+        // Mono
+        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+        SDL_RenderFillRect(renderer, &monoBtn);
+
+        // Multi
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        SDL_RenderFillRect(renderer, &multiBtn);
+
+        // Retour
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_RenderFillRect(renderer, &retourBtn);
+
+        // Partie Avatar visible seulement si mode choisi
+        if (mode != 0)
+        {
+            // Avatar 1
+            if (avatarChoice == 1)
+                SDL_SetRenderDrawColor(renderer, 255, 100, 0, 255);
+            else
+                SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+
+            SDL_RenderFillRect(renderer, &avatar1);
+
+            // Avatar 2
+            if (avatarChoice == 2)
+                SDL_SetRenderDrawColor(renderer, 255, 100, 0, 255);
+            else
+                SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+
+            SDL_RenderFillRect(renderer, &avatar2);
+
+            // Valider
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderFillRect(renderer, &valider);
+        }
+
+        SDL_RenderPresent(renderer);
+    }
 }
+/*
 void enigma_menu(SDL_Renderer *renderer,TTF_Font *font){
 	
 }
