@@ -8,8 +8,8 @@
 //definiton des macros
 #define MAX_BUTTON_COUNT 8
 #define MAX_ELEM_COUNT 5
-#define DARK_GREY 105,105,105,255
-#define DARK_GREY 200,200,200,255
+#define DARK_GREY (SDL_Color){105,105,105,255}
+#define DARK_GREY (SDL_Color){200,200,200,255}
 //definition des types
 enum menu {play,settings,save,highscores,character,enigma,back,exitgame};
 typedef struct button{
