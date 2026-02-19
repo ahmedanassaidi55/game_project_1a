@@ -226,7 +226,7 @@ void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
         }
 }
 
-/*void character_menu(SDL_Renderer *renderer,TTF_Font *font)
+void character_menu(SDL_Renderer *renderer,TTF_Font *font)
 {
     struct menu_t character_menu;
     SDL_Surface *surf=IMG_Load("assets/frame_01.jpg");
@@ -251,9 +251,6 @@ void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
     SDL_Event event;
 
     // ----------- Partie avatar -----------
-    SDL_Rect avatar1 = {200, 320, 120, 50};
-    SDL_Rect avatar2 = {450, 320, 120, 50};
-    SDL_Rect valider = {350, 420, 120, 50};
 
     while (running)
     {
@@ -263,7 +260,7 @@ void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
-                r;
+                ;
 
             if (event.type == SDL_MOUSEBUTTONDOWN)
             {
@@ -365,7 +362,7 @@ void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
 
         SDL_RenderPresent(renderer);
     }
-}*/
+}
 /*
 void enigma_menu(SDL_Renderer *renderer,TTF_Font *font){
 	
