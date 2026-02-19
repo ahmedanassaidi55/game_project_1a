@@ -32,20 +32,21 @@ struct menu{
 //definition des variables globaux
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
+extern int running;
 struct menu main_menu;
 int main_menu_init = 0;
 //definition des fonctions 'helper'
 int init_game();
 void exit_game();
-void init_main_menu(SDL_Renderer *renderer)
-void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y);
-void switch_menu(enum menu goto_menu);
-void main_menu(SDL_Renderer *renderer);
+void init_main_menu(SDL_Renderer *renderer, TTF_Font *font);
+void on_button_click_goto_menu(SDL_Renderer *renderer,button *buttons,int count,int mouse_x,int mouse_y);
+void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer);
+void main_menu(SDL_Renderer *renderer,TTF_Font *font);
 void display_anim(SDL_Renderer *renderer);
-void play_menu(SDL_Renderer *renderer);
-void settings_menu(SDL_Renderer *renderer);
-void save_menu(SDL_Renderer *renderer);
-void highscores_menu(SDL_Renderer *renderer);
-void character_menu(SDL_Renderer *renderer);
-void enigma_menu(SDL_Renderer *renderer);
-void exit_anim(SDL_Renderer *renderer);
+void play_menu(SDL_Renderer *renderer,TTF_Font *font);
+void settings_menu(SDL_Renderer *renderer,TTF_Font *font);
+void save_menu(SDL_Renderer *renderer,TTF_Font *font);
+void highscores_menu(SDL_Renderer *renderer,TTF_Font *font);
+void character_menu(SDL_Renderer *renderer,TTF_Font *font);
+void enigma_menu(SDL_Renderer *renderer,TTF_Font *font);
+void exit_anim(SDL_Renderer *renderer,TTF_Font *font);

@@ -41,22 +41,42 @@ int init_game(){
     	}
 	return 0;
 }
-void init_main_menu(SDL_Renderer *renderer){
+void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
 	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface.\n");
 		return;
 	}
-	strcpy(main_menu.buttons[0].label,);
-	strcpy(main_menu.buttons[1].label,);
-	strcpy(main_menu.buttons[2].label,);
-	strcpy(main_menu.buttons[3].label,);
+	strcpy(main_menu.buttons[0].label,"Play");
+	main_menu.buttons[0].type_menu=play;
+	strcpy(main_menu.buttons[1].label,"Settings");
+	main_menu.buttons[1].type_menu=settings;
+	strcpy(main_menu.buttons[2].label,"Save/Load");
+	main_menu.buttons[2].type_menu=save;
+	strcpy(main_menu.buttons[3].label,"Highscores");
+	main_menu.buttons[3].type_menu=highscores;
+	strcpy(main_menu.buttons[4].label,"Character menu");
+	main_menu.buttons[4].type_menu=character;
+	strcpy(main_menu.buttons[5].label,"Enigma");
+	main_menu.buttons[5].type_menu=enigma;
+	strcpy(main_menu.buttons[6].label,"Quit");
+	main_menu.buttons[6].type_menu=exitgame;
 	main_menu.background =SDL_CreateTextureFromSurface(renderer,temp_surf);
 	SDL_FreeSurface(temp_surf);
 	main_menu.position.x = 0;
 	main_menu.position.y = 0;
 	main_menu.position.w = 600;
 	main_menu.position.h = 358;
+	for(int i=0; i<5;i++){
+		main_menu.buttons[i].position.x=120;
+		main_menu.buttons[i].position.y=90+i*30;
+		main_menu.buttons[i].position.h=24;
+		main_menu.buttons[i].position.w=160;
+		SDL_Surface *button_surface=TTF_RenderText_Blended(font,
+				main_menu.buttons[i].label,DARK_GREY);
+		main_menu.buttons[i].texture=SDL_CreateTextureFromSurface(renderer,button_surface);
+		SDL_FreeSurface(button_surface);
+	}
 	
 }
 
@@ -73,38 +93,38 @@ void exit_game(){
 
 //changement de menu
 
-void switch_menu(enum menu goto_menu){
+void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer){
 	switch(goto_menu){
 		case play:
 			display_anim(renderer);
-			play_menu(renderer);
+			play_menu(renderer,font);
 			break;
 		case settings:
 			display_anim(renderer);
-			settings_menu(renderer);
+			settings_menu(renderer,font);
 			break;
 		case save:
 			display_anim(renderer);
-			save_menu(renderer);
+			save_menu(renderer,font);
 			break;
 		case highscores:
 			display_anim(renderer);
-			highscores_menu(renderer);
+			highscores_menu(renderer,font);
 			break;
 		case character:
 			display_anim(renderer);
-			character_menu(renderer);
+			character_menu(renderer,font);
 			break;
 		case enigma:
 			display_anim(renderer);
-			enigma_menu(renderer);
+			enigma_menu(renderer,font);
 		case back:
 			display_anim(renderer);
-			main_menu(renderer);
+			main_menu(renderer,font);
 			break;
 		case exitgame:
 			exit_anim(renderer);
-			exit_game(window,renderer);
+			running = 0;
 			break;
 	}
 }
@@ -119,4 +139,24 @@ void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y
 			switch_menu(pB->type_menu);
 		}
 	}
-}	
+}
+//animation lors de changement de menu
+
+void display_anim(SDL_Renderer *renderer){
+	char path[64];
+	for(int i = 11;i >=1;i--){
+		sprintf(path,"assets/frame_%02d.jpg",i);
+		SDL_Surface *curr_frame = IMG_load(path);
+		if(!surf){
+			printf("error loading %s",path);
+			return;
+		}
+		SDL_Texture *curr_texture = SDL_CreateTextureFromSurface(curr_frame);
+		SDL_FreeSurface(curr_frame);
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer,curr_texture,NULL,NULL);
+		SDL_RenderPresent(renderer);
+		SDL_DestroyTexture(curr_texture);
+		SDL_Delay(10);
+	}
+}
