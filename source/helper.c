@@ -137,7 +137,7 @@ void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer){
 			break;
 		case highscores:
 			display_anim(renderer);
-			//highscores_menu(renderer,font);
+			highscores_menu(renderer,font);
 			break;
 		case character:
 			display_anim(renderer);
@@ -198,10 +198,25 @@ void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 }
 void save_menu(SDL_Renderer *renderer,TTF_Font *font){
 		
-}
+}*/
+
 void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
-	
+	Score list[6] = {{"Ahmed", 1500}, {"Sami", 1200}, {"Amira", 900},{"Ali",750},{"Khaled",500},{"Wissem",400}};
+	SDL_Color white = {255, 255, 255, 255};
+	char buffer[100];
+	for (int i = 0; i < 3; i++) {
+       		sprintf(buffer, "%d. %s : %d", i+1, list[i].name, list[i].score);
+       	SDL_Surface* surface = TTF_RenderText_Solid(font, buffer, white);
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+        SDL_Rect dest = { 120+((int)i/3)*230, 120 + (i * 50), surface->w*2, surface->h*2 };
+        SDL_RenderCopy(renderer, texture, NULL, &dest);
+        
+        SDL_FreeSurface(surface);
+        SDL_DestroyTexture(texture);
+        }
+        
 }
+/*
 void character_menu(SDL_Renderer *renderer,TTF_Font *font){
 	
 }

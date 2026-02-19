@@ -11,6 +11,7 @@ int main(){
 		printf("font access error\n");
 		return 1;
 	}
+	main_menu(renderer,game_font);
 	while (running){
 		while(SDL_PollEvent(&event)){
 			if(event.type == SDL_QUIT){
@@ -20,7 +21,7 @@ int main(){
 				on_button_click_goto_menu(renderer,game_font,mainMenu.buttons,7,event.motion.x,event.motion.y);
 			}
 		}
-		main_menu(renderer,game_font);
+		
 	}
 	exit_game();
 	return 0;

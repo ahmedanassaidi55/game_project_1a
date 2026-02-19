@@ -11,6 +11,10 @@
 #define DARK_GREY (SDL_Color){105,105,105,255}
 #define LIGHT_GREY (SDL_Color){200,200,200,255}
 //definition des types
+typedef struct {
+    char name[50];
+    int score;
+} Score;
 enum menu {play,settings,save,highscores,character,enigma,back,exitgame};
 typedef struct button{
 	SDL_Texture *texture;
