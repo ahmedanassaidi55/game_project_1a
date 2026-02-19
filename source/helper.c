@@ -367,3 +367,30 @@ void enigma_menu(SDL_Renderer *renderer,TTF_Font *font){
 	
 }
 */
+void highlight_hovered(SDL_Renderer *renderer,button * buttons,int btn_count,TTF_Font *font,int mouse_x, int mouse_y){
+	SDL_Point p ={mouse_x,mouse_y};
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer,
+                   mainMenu.background,
+                   NULL,
+                   &mainMenu.position);
+	SDL_Surface *text_surf;
+	for(int i=0;i<btn_count;i++){
+		if(SDL_PointInRect(&p,&buttons[i].position)){
+			text_surf = TTF_RenderText_Blended(font,
+				mainMenu.buttons[i].label,LIGHT_GREY);
+		}else{
+			text_surf = TTF_RenderText_Blended(font,
+				mainMenu.buttons[i].label,DARK_GREY);
+		}
+		buttons[i].texture =SDL_CreateTextureFromSurface(
+						renderer,text_surf);
+		SDL_RenderCopy(renderer,
+                       mainMenu.buttons[i].texture,
+                       NULL,
+                       &mainMenu.buttons[i].position);
+		}
+	SDL_FreeSurface(text_surf);
+	SDL_RenderPresent(renderer);
+	
+}

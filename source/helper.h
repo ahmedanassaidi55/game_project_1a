@@ -44,6 +44,7 @@ extern int main_menu_init;
 int init_game();
 void exit_game();
 void init_main_menu(SDL_Renderer *renderer, TTF_Font *font);
+void highlight_hovered(SDL_Renderer *renderer,button * buttons,int btn_count,TTF_Font *font,int mouse_x, int mouse_y);
 void on_button_click_goto_menu(SDL_Renderer *renderer,TTF_Font *font,button *buttons,int count,int mouse_x,int mouse_y);
 void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer);
 void main_menu(SDL_Renderer *renderer,TTF_Font *font);
