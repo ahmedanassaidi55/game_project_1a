@@ -3,7 +3,6 @@
 int main(){
 	TTF_Font game_font = NULL;
 	SDL_Event event;
-	running =1;
 	if(init_game()){
 		return 1;
 	};
