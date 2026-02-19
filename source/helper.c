@@ -1,5 +1,6 @@
 #include "helper.h"
-
+struct menu mainMenu;
+int main_menu_init = 0;
 //initialiser le jeu 
 
 int init_game(){
@@ -47,34 +48,34 @@ void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
 		printf("error creating surface.\n");
 		return;
 	}
-	strcpy(main_menu.buttons[0].label,"Play");
-	main_menu.buttons[0].type_menu=play;
-	strcpy(main_menu.buttons[1].label,"Settings");
-	main_menu.buttons[1].type_menu=settings;
-	strcpy(main_menu.buttons[2].label,"Save/Load");
-	main_menu.buttons[2].type_menu=save;
-	strcpy(main_menu.buttons[3].label,"Highscores");
-	main_menu.buttons[3].type_menu=highscores;
-	strcpy(main_menu.buttons[4].label,"Character menu");
-	main_menu.buttons[4].type_menu=character;
-	strcpy(main_menu.buttons[5].label,"Enigma");
-	main_menu.buttons[5].type_menu=enigma;
-	strcpy(main_menu.buttons[6].label,"Quit");
-	main_menu.buttons[6].type_menu=exitgame;
-	main_menu.background =SDL_CreateTextureFromSurface(renderer,temp_surf);
+	strcpy(MainMenu.buttons[0].label,"Play");
+	mainMenu.buttons[0].type_menu=play;
+	strcpy(mainMenu.buttons[1].label,"Settings");
+	mainMenu.buttons[1].type_menu=settings;
+	strcpy(mainMenu.buttons[2].label,"Save/Load");
+	mainMenu.buttons[2].type_menu=save;
+	strcpy(mainMenu.buttons[3].label,"Highscores");
+	mainMenu.buttons[3].type_menu=highscores;
+	strcpy(mainMenu.buttons[4].label,"Character menu");
+	mainMenu.buttons[4].type_menu=character;
+	strcpy(mainMenu.buttons[5].label,"Enigma");
+	mainMenu.buttons[5].type_menu=enigma;
+	strcpy(mainMenu.buttons[6].label,"Quit");
+	mainMenu.buttons[6].type_menu=exitgame;
+	mainMenu.background =SDL_CreateTextureFromSurface(renderer,temp_surf);
 	SDL_FreeSurface(temp_surf);
-	main_menu.position.x = 0;
-	main_menu.position.y = 0;
-	main_menu.position.w = 600;
-	main_menu.position.h = 358;
+	mainMenu.position.x = 0;
+	mainMenu.position.y = 0;
+	mainMenu.position.w = 600;
+	mainMenu.position.h = 358;
 	for(int i=0; i<5;i++){
-		main_menu.buttons[i].position.x=120;
-		main_menu.buttons[i].position.y=90+i*30;
-		main_menu.buttons[i].position.h=24;
-		main_menu.buttons[i].position.w=160;
+		mainMenu.buttons[i].position.x=120;
+		mainMenu.buttons[i].position.y=90+i*30;
+		mainMenu.buttons[i].position.h=24;
+		mainMenu.buttons[i].position.w=160;
 		SDL_Surface *button_surface=TTF_RenderText_Blended(font,
-				main_menu.buttons[i].label,DARK_GREY);
-		main_menu.buttons[i].texture=SDL_CreateTextureFromSurface(renderer,button_surface);
+				mainMenu.buttons[i].label,DARK_GREY);
+		mainMenu.buttons[i].texture=SDL_CreateTextureFromSurface(renderer,button_surface);
 		SDL_FreeSurface(button_surface);
 	}
 	
