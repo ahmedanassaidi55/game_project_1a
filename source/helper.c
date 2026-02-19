@@ -80,6 +80,32 @@ void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
 	}
 	
 }
+void main_menu(SDL_Renderer *renderer, TTF_Font *font){
+
+    if(!main_menu_init){
+        init_main_menu(renderer, font);
+        main_menu_init = 1;
+    }
+
+    SDL_RenderClear(renderer);
+
+    // Draw background
+    SDL_RenderCopy(renderer,
+                   mainMenu.background,
+                   NULL,
+                   &mainMenu.position);
+
+    // Draw buttons
+    for(int i = 0; i < 7; i++){
+        SDL_RenderCopy(renderer,
+                       mainMenu.buttons[i].texture,
+                       NULL,
+                       &mainMenu.buttons[i].position);
+    }
+
+    SDL_RenderPresent(renderer);
+}
+
 
 //quitter le jeu et nettoyer la memoire occupée
 
