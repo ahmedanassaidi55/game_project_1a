@@ -21,7 +21,7 @@ int main(){
 				on_button_click_goto_menu(renderer,game_font,mainMenu.buttons,7,event.motion.x,event.motion.y);
 			}
 		}
-		highlight_hovered(renderer,game_font,mainMenu.buttons,7,
+		highlight_hovered(renderer,mainMenu.buttons,7,
 				event.motion.x,event.motion.y);
 	}
 	exit_game();

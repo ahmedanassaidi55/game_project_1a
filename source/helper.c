@@ -75,6 +75,10 @@ void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
 				mainMenu.buttons[i].label,DARK_GREY);
 	mainMenu.buttons[i].texture=SDL_CreateTextureFromSurface(renderer,
 							button_surface);
+		button_surface=TTF_RenderText_Blended(font,
+				mainMenu.buttons[i].label,LIGHT_GREY);
+	mainMenu.buttons[i].texture_hovered=SDL_CreateTextureFromSurface(
+						renderer,button_surface);
 		mainMenu.buttons[i].position.x=120;
 		mainMenu.buttons[i].position.y=90+i*30;
 		mainMenu.buttons[i].position.h=button_surface->h;
@@ -370,7 +374,6 @@ void enigma_menu(SDL_Renderer *renderer,TTF_Font *font){
 void highlight_hovered(SDL_Renderer *renderer,
                        button *buttons,
                        int btn_count,
-                       TTF_Font *font,
                        int mouse_x,
                        int mouse_y)
 {
@@ -385,33 +388,20 @@ void highlight_hovered(SDL_Renderer *renderer,
 
     for(int i = 0; i < btn_count; i++)
     {
-        SDL_Color color;
-
-        if(SDL_PointInRect(&p, &buttons[i].position))
-            color = LIGHT_GREY;
-        else
-            color = DARK_GREY;
-
-        SDL_Surface *text_surf =
-            TTF_RenderText_Blended(font,
-                                   buttons[i].label,
-                                   color);
-
-        if(!text_surf)
-            continue;
-
-        if(buttons[i].texture)
-            SDL_DestroyTexture(buttons[i].texture);
-
-        buttons[i].texture =
-            SDL_CreateTextureFromSurface(renderer, text_surf);
-
-        SDL_FreeSurface(text_surf);
-
+        if(SDL_PointInRect(&p, &buttons[i].position)){
         SDL_RenderCopy(renderer,
-                       buttons[i].texture,
+                       mainMenu.buttons[i].texture_hovered,
                        NULL,
-                       &buttons[i].position);
+                       &mainMenu.buttons[i].position);
+        }
+        else{
+        	SDL_RenderCopy(renderer,
+                       mainMenu.buttons[i].texture,
+                       NULL,
+                       &mainMenu.buttons[i].position);
+        }
+        
+
     }
 
     SDL_RenderPresent(renderer);
