@@ -33,8 +33,8 @@ struct menu{
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern int running;
-struct menu main_menu;
-int main_menu_init = 0;
+extern struct menu mainMenu;
+extern int main_menu_init;
 //definition des fonctions 'helper'
 int init_game();
 void exit_game();
