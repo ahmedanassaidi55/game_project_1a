@@ -40,6 +40,7 @@ int init_game(){
         	printf("Erreur TTF_Init : %s\n", TTF_GetError());
         	return 1;
     	}
+	running=1;
 	return 0;
 }
 void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
