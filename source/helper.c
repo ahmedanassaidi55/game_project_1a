@@ -1,6 +1,7 @@
 #include "helper.h"
 struct menu_t mainMenu;
 int main_menu_init = 0;
+enum current_menu_state current_menu = MENU_MAIN;
 //initialiser le jeu 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
@@ -70,21 +71,20 @@ void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
 	mainMenu.position.w = 600;
 	mainMenu.position.h = 358;
 	for(int i=0; i<7;i++){
-		
 		SDL_Surface *button_surface=TTF_RenderText_Blended(font,
 				mainMenu.buttons[i].label,DARK_GREY);
-	mainMenu.buttons[i].texture=SDL_CreateTextureFromSurface(renderer,
-							button_surface);
+		mainMenu.buttons[i].texture=SDL_CreateTextureFromSurface(renderer,
+						button_surface);
+		SDL_FreeSurface(button_surface);
+		
 		button_surface=TTF_RenderText_Blended(font,
 				mainMenu.buttons[i].label,LIGHT_GREY);
-	mainMenu.buttons[i].texture_hovered=SDL_CreateTextureFromSurface(
-						renderer,button_surface);
+		mainMenu.buttons[i].texture_hovered=SDL_CreateTextureFromSurface(
+					renderer,button_surface);
 		mainMenu.buttons[i].position.x=120;
 		mainMenu.buttons[i].position.y=90+i*30;
 		mainMenu.buttons[i].position.h=button_surface->h;
 		mainMenu.buttons[i].position.w=button_surface->w>160?160:button_surface->w;
-
-		SDL_FreeSurface(button_surface);
 	}
 	
 }
@@ -131,39 +131,30 @@ void exit_game(){
 void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer){
 	switch(goto_menu){
 		case play:
-			//display_anim(renderer);
-			//play_menu(renderer,font);
+			current_menu = MENU_PLAY;
 			break;
 		case settings:
-			//display_anim(renderer);
-			//settings_menu(renderer,font);
+			current_menu = MENU_SETTINGS;
 			break;
 		case save:
-			//display_anim(renderer);
-			//save_menu(renderer,font);
+			current_menu = MENU_SAVE;
 			break;
 		case highscores:
-			//display_anim(renderer);
-			highscores_menu(renderer,font);
+			current_menu = MENU_HIGHSCORES;
 			break;
 		case character:
-			//display_anim(renderer);
-			//character_menu(renderer,font);
+			current_menu = MENU_CHARACTER;
 			break;
 		case enigma:
-			//display_anim(renderer);
-			//enigma_menu(renderer,font);
+			//current_menu = MENU_ENIGMA;
 			break;
 		case back:
-			//display_anim(renderer);
-			main_menu(renderer,font);
+			current_menu = MENU_MAIN;
 			break;
 		case exitgame:
-			//exit_anim(renderer,font);
 			running = 0;
 			break;
 		default:
-			
 			break;
 	}
 }
@@ -367,19 +358,17 @@ void highlight_hovered(SDL_Renderer *renderer,
     for(int i = 0; i < btn_count; i++)
     {
         if(SDL_PointInRect(&p, &buttons[i].position)){
-        SDL_RenderCopy(renderer,
-                       mainMenu.buttons[i].texture_hovered,
-                       NULL,
-                       &mainMenu.buttons[i].position);
+            SDL_RenderCopy(renderer,
+                           buttons[i].texture_hovered,
+                           NULL,
+                           &buttons[i].position);
         }
         else{
-        	SDL_RenderCopy(renderer,
-                       mainMenu.buttons[i].texture,
-                       NULL,
-                       &mainMenu.buttons[i].position);
+            SDL_RenderCopy(renderer,
+                           buttons[i].texture,
+                           NULL,
+                           &buttons[i].position);
         }
-        
-
     }
 
     SDL_RenderPresent(renderer);
