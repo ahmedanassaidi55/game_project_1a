@@ -210,158 +210,139 @@ void save_menu(SDL_Renderer *renderer,TTF_Font *font){
 		
 }*/
 
-void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
-	Score list[6] = {{"Ahmed", 1500}, {"Sami", 1200}, {"Amira", 900},{"Ali",750},{"Khaled",500},{"Wissem",400}};
-	SDL_Color white = {255, 255, 255, 255};
+struct menu_t highscores_menu_data;
+int highscores_menu_init = 0;
+Score highscores_list[6] = {{"Ahmed", 1500}, {"Sami", 1200}, {"Amira", 900},{"Ali",750},{"Khaled",500},{"Wissem",400}};
+
+void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
+	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+	if(!temp_surf){
+		printf("error creating surface for highscores.\n");
+		return;
+	}
+	highscores_menu_data.background = SDL_CreateTextureFromSurface(renderer, temp_surf);
+	SDL_FreeSurface(temp_surf);
+	highscores_menu_data.position.x = 0;
+	highscores_menu_data.position.y = 0;
+	highscores_menu_data.position.w = 600;
+	highscores_menu_data.position.h = 358;
+	
 	char buffer[100];
 	for (int i = 0; i < 6; i++) {
-       		sprintf(buffer, "%d. %s : %d", i+1, list[i].name, list[i].score);
-       	SDL_Surface* surface = TTF_RenderText_Solid(font, buffer, white);
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-        SDL_Rect dest = { 120+((int)i/3)*230, 120 + (i * 50), surface->w*2, surface->h*2 };
-        SDL_RenderCopy(renderer, texture, NULL, &dest);
-        
-        SDL_FreeSurface(surface);
-        SDL_DestroyTexture(texture);
-        }
+		sprintf(buffer, "%d. %s : %d", i+1, highscores_list[i].name, highscores_list[i].score);
+		SDL_Surface* surface = TTF_RenderText_Blended(font, buffer, LIGHT_GREY);
+		highscores_menu_data.elements[i].texture = SDL_CreateTextureFromSurface(renderer, surface);
+		highscores_menu_data.elements[i].position.x = 120 + ((i % 3) * 230);
+		highscores_menu_data.elements[i].position.y = 120 + ((i / 3) * 80);
+		highscores_menu_data.elements[i].position.w = surface->w;
+		highscores_menu_data.elements[i].position.h = surface->h;
+		SDL_FreeSurface(surface);
+	}
 }
 
-void character_menu(SDL_Renderer *renderer,TTF_Font *font)
-{
-    struct menu_t character_menu;
-    SDL_Surface *surf=IMG_Load("assets/frame_01.jpg");
-    character_menu.background=SDL_CreateTextureFromSurface(renderer,surf);
-    SDL_FreeSurface(surf);
-    strcpy(character_menu.buttons[0].label,"Singleplayer");
-    character_menu.buttons[0].type_menu = mono;
-    strcpy(character_menu.buttons[1].label,"Multiplayer");
-    character_menu.buttons[1].type_menu = multi;
-    strcpy(character_menu.buttons[2].label,"placeholdername1");
-    character_menu.buttons[2].type_menu = character1;
-    strcpy(character_menu.buttons[3].label,"placeholdername2");
-    character_menu.buttons[3].type_menu = character2;
-    strcpy(character_menu.buttons[4].label,"Back");
-    character_menu.buttons[4].type_menu = back;
-    character_menu.elements[0].position=(SDL_Rect){120,80,160,160};
-    character_menu.elements[1].position=(SDL_Rect){330,80,160,160};
-    
-    int mode = 0;           // 0 = rien | 1 = mono | 2 = multi
-    int avatarChoice = 0;   // 0 = rien | 1 = avatar1 | 2 = avatar2
+void highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
+	if(!highscores_menu_init){
+		init_highscores_menu(renderer, font);
+		highscores_menu_init = 1;
+	}
+	
+	SDL_RenderClear(renderer);
+	
+	// Draw background
+	SDL_RenderCopy(renderer, highscores_menu_data.background, NULL, &highscores_menu_data.position);
+	
+	// Draw scores
+	for(int i = 0; i < 6; i++){
+		SDL_RenderCopy(renderer, highscores_menu_data.elements[i].texture, NULL, &highscores_menu_data.elements[i].position);
+	}
+	
+	SDL_RenderPresent(renderer);
+}
 
-    SDL_Event event;
+struct menu_t character_menu_data;
+int character_menu_init = 0;
+int character_mode = 0;           // 0 = none | 1 = mono | 2 = multi
+int character_avatar_choice = 0;  // 0 = none | 1 = avatar1 | 2 = avatar2
 
-    // ----------- Partie avatar -----------
+void init_character_menu(SDL_Renderer *renderer, TTF_Font *font){
+	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+	if(!temp_surf){
+		printf("error creating surface for character menu.\n");
+		return;
+	}
+	character_menu_data.background = SDL_CreateTextureFromSurface(renderer, temp_surf);
+	SDL_FreeSurface(temp_surf);
+	character_menu_data.position.x = 0;
+	character_menu_data.position.y = 0;
+	character_menu_data.position.w = 600;
+	character_menu_data.position.h = 358;
+	
+	strcpy(character_menu_data.buttons[0].label, "Singleplayer");
+	character_menu_data.buttons[0].position = (SDL_Rect){120, 80, 160, 40};
+	strcpy(character_menu_data.buttons[1].label, "Multiplayer");
+	character_menu_data.buttons[1].position = (SDL_Rect){330, 80, 160, 40};
+	strcpy(character_menu_data.buttons[2].label, "Avatar 1");
+	character_menu_data.buttons[2].position = (SDL_Rect){100, 150, 160, 160};
+	strcpy(character_menu_data.buttons[3].label, "Avatar 2");
+	character_menu_data.buttons[3].position = (SDL_Rect){340, 150, 160, 160};
+	strcpy(character_menu_data.buttons[4].label, "Confirm");
+	character_menu_data.buttons[4].position = (SDL_Rect){225, 320, 150, 30};
+	strcpy(character_menu_data.buttons[5].label, "Back");
+	character_menu_data.buttons[5].position = (SDL_Rect){10, 10, 80, 30};
+	
+	for(int i = 0; i < 6; i++){
+		SDL_Surface *btn_surface = TTF_RenderText_Blended(font, character_menu_data.buttons[i].label, DARK_GREY);
+		character_menu_data.buttons[i].texture = SDL_CreateTextureFromSurface(renderer, btn_surface);
+		SDL_FreeSurface(btn_surface);
+	}
+}
 
-    while (running)
-    {
-        // ========================
-        // GESTION EVENTS
-        // ========================
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-                ;
-
-            if (event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                SDL_Point p = {event.motion.x,event.motion.y};
-
-                // Choix mode
-                if (SDL_PointInRect(&p, &monoBtn))
-                {
-                    mode = 1;
-                    avatarChoice = 0; // reset avatar
-                }
-
-                if (SDL_PointInRect(&p, &multiBtn))
-                {
-                    mode = 2;
-                    avatarChoice = 0;
-                }
-
-                // Choix avatar
-                if (mode != 0)
-                {
-                    if (SDL_PointInRect(&p, &avatar1))
-                        avatarChoice = 1;
-
-                    if (SDL_PointInRect(&p, &avatar2))
-                        avatarChoice = 2;
-                }
-
-                // Valider
-                if (mode != 0 && avatarChoice != 0 &&
-                    SDL_PointInRect(&p, &valider))
-                {
-                    printf("Mode: %d | Avatar: %d\n",
-                           mode, avatarChoice);
-                    printf("Go to best scores menu\n");
-                }
-
-                // Retour
-                if (SDL_PointInRect(&p, &retourBtn)){
-                    display_anim(renderer);
-                    main_menu(renderer,font);}
-                    
-            }
-
-            // Touche ENTER
-            if (event.type == SDL_KEYDOWN)
-            {
-                if (event.key.keysym.sym == SDLK_RETURN &&
-                    mode != 0 && avatarChoice != 0)
-                {
-                    printf("Mode: %d | Avatar: %d\n",
-                           mode, avatarChoice);
-                    printf("Go to best scores menu (ENTER)\n");
-                }
-            }
-        }
-
-        // ========================
-        // RENDER
-        // ========================
-        SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255);
-        SDL_RenderClear(renderer);
-
-        // Mono
-        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-        SDL_RenderFillRect(renderer, &monoBtn);
-
-        // Multi
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-        SDL_RenderFillRect(renderer, &multiBtn);
-
-        // Retour
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(renderer, &retourBtn);
-
-        // Partie Avatar visible seulement si mode choisi
-        if (mode != 0)
-        {
-            // Avatar 1
-            if (avatarChoice == 1)
-                SDL_SetRenderDrawColor(renderer, 255, 100, 0, 255);
-            else
-                SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-
-            SDL_RenderFillRect(renderer, &avatar1);
-
-            // Avatar 2
-            if (avatarChoice == 2)
-                SDL_SetRenderDrawColor(renderer, 255, 100, 0, 255);
-            else
-                SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-
-            SDL_RenderFillRect(renderer, &avatar2);
-
-            // Valider
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            SDL_RenderFillRect(renderer, &valider);
-        }
-
-        SDL_RenderPresent(renderer);
-    }
+void character_menu(SDL_Renderer *renderer, TTF_Font *font){
+	if(!character_menu_init){
+		init_character_menu(renderer, font);
+		character_menu_init = 1;
+	}
+	
+	SDL_RenderClear(renderer);
+	
+	// Draw background
+	SDL_RenderCopy(renderer, character_menu_data.background, NULL, &character_menu_data.position);
+	
+	// Draw mode selection buttons
+	SDL_SetRenderDrawColor(renderer, 100, 100, 200, 255);
+	SDL_RenderFillRect(renderer, &character_menu_data.buttons[0].position);
+	SDL_SetRenderDrawColor(renderer, 100, 200, 100, 255);
+	SDL_RenderFillRect(renderer, &character_menu_data.buttons[1].position);
+	
+	// Draw avatar selection if mode is chosen
+	if(character_mode != 0){
+		// Avatar 1
+		if(character_avatar_choice == 1)
+			SDL_SetRenderDrawColor(renderer, 255, 140, 0, 255);
+		else
+			SDL_SetRenderDrawColor(renderer, 200, 200, 100, 255);
+		SDL_RenderFillRect(renderer, &character_menu_data.buttons[2].position);
+		
+		// Avatar 2
+		if(character_avatar_choice == 2)
+			SDL_SetRenderDrawColor(renderer, 255, 140, 0, 255);
+		else
+			SDL_SetRenderDrawColor(renderer, 200, 200, 100, 255);
+		SDL_RenderFillRect(renderer, &character_menu_data.buttons[3].position);
+		
+		// Confirm button
+		if(character_avatar_choice != 0)
+			SDL_SetRenderDrawColor(renderer, 150, 255, 150, 255);
+		else
+			SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+		SDL_RenderFillRect(renderer, &character_menu_data.buttons[4].position);
+	}
+	
+	// Draw back button
+	SDL_SetRenderDrawColor(renderer, 200, 100, 100, 255);
+	SDL_RenderFillRect(renderer, &character_menu_data.buttons[5].position);
+	
+	SDL_RenderPresent(renderer);
 }
 /*
 void enigma_menu(SDL_Renderer *renderer,TTF_Font *font){

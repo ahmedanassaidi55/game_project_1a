@@ -41,10 +41,17 @@ extern SDL_Renderer *renderer;
 extern int running;
 extern struct menu_t mainMenu;
 extern int main_menu_init;
-//definition des fonctions 'helper'
+extern struct menu_t highscores_menu_data;
+extern int highscores_menu_init;
+extern struct menu_t character_menu_data;
+extern int character_menu_init;
+extern int character_mode;
+extern int character_avatar_choice;//definition des fonctions 'helper'
 int init_game();
 void exit_game();
 void init_main_menu(SDL_Renderer *renderer, TTF_Font *font);
+void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font);
+void init_character_menu(SDL_Renderer *renderer, TTF_Font *font);
 void highlight_hovered(SDL_Renderer *renderer,button * buttons,int btn_count,int mouse_x, int mouse_y);
 void on_button_click_goto_menu(SDL_Renderer *renderer,TTF_Font *font,button *buttons,int count,int mouse_x,int mouse_y);
 void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer);
