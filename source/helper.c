@@ -128,7 +128,7 @@ void exit_game(){
 
 //changement de menu
 
-void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer){
+void switch_menu(enum menu goto_menu){
 	switch(goto_menu){
 		case play:
 			current_menu = MENU_PLAY;
@@ -161,12 +161,12 @@ void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer){
 
 //detection du bouton appui
 
-void on_button_click_goto_menu(SDL_Renderer *renderer,TTF_Font *font,button *buttons,int count,int mouse_x,int mouse_y){
+void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y){
 	button *pB;
 	SDL_Point p={mouse_x,mouse_y};
 	for (pB=buttons;pB<buttons+count;pB++){
 		if(SDL_PointInRect(&p,&pB->position)){
-			switch_menu(pB->type_menu,font,renderer);
+			switch_menu(pB->type_menu);
 		}
 	}
 }

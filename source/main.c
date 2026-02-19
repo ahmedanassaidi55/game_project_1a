@@ -19,7 +19,7 @@ int main(){
 			if(event.type == SDL_MOUSEBUTTONDOWN){
 				switch(current_menu){
 					case MENU_MAIN:
-						on_button_click_goto_menu(renderer, game_font, mainMenu.buttons, 7, event.motion.x, event.motion.y);
+						on_button_click_goto_menu(mainMenu.buttons, 7, event.motion.x, event.motion.y);
 						break;
 					case MENU_HIGHSCORES:
 						// Handle highscores menu clicks if needed
