@@ -127,36 +127,39 @@ void exit_game(){
 void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer){
 	switch(goto_menu){
 		case play:
-			display_anim(renderer);
+			//display_anim(renderer);
 			//play_menu(renderer,font);
 			break;
 		case settings:
-			display_anim(renderer);
+			//display_anim(renderer);
 			//settings_menu(renderer,font);
 			break;
 		case save:
-			display_anim(renderer);
+			//display_anim(renderer);
 			//save_menu(renderer,font);
 			break;
 		case highscores:
-			display_anim(renderer);
+			//display_anim(renderer);
 			highscores_menu(renderer,font);
 			break;
 		case character:
-			display_anim(renderer);
+			//display_anim(renderer);
 			character_menu(renderer,font);
 			break;
 		case enigma:
-			display_anim(renderer);
+			//display_anim(renderer);
 			//enigma_menu(renderer,font);
 			break;
 		case back:
-			display_anim(renderer);
+			//display_anim(renderer);
 			main_menu(renderer,font);
 			break;
 		case exitgame:
 			//exit_anim(renderer,font);
 			running = 0;
+			break;
+		default:
+			
 			break;
 	}
 }
@@ -222,16 +225,27 @@ void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
 
 void character_menu(SDL_Renderer *renderer,TTF_Font *font)
 {
-    int running = 1;
+    struct menu_t character_menu;
+    SDL_Surface *surf=IMG_Load("assets/frame_01.jpg");
+    character_menu.background=SDL_CreateTextureFromSurface(renderer,surf);
+    SDL_FreeSurface(surf);
+    strcpy(character_menu.buttons[0].label,"Singleplayer");
+    character_menu.buttons[0].type_menu = mono;
+    strcpy(character_menu.buttons[1].label,"Multiplayer");
+    character_menu.buttons[1].type_menu = multi;
+    strcpy(character_menu.buttons[2].label,"placeholdername1");
+    character_menu.buttons[2].type_menu = character1;
+    strcpy(character_menu.buttons[3].label,"placeholdername2");
+    character_menu.buttons[3].type_menu = character2;
+    strcpy(character_menu.buttons[4].label,"Back");
+    character_menu.buttons[4].type_menu = back;
+    character_menu.elements[0].position=(SDL_Rect){120,80,160,160};
+    character_menu.elements[1].position=(SDL_Rect){330,80,160,160};
+    
     int mode = 0;           // 0 = rien | 1 = mono | 2 = multi
     int avatarChoice = 0;   // 0 = rien | 1 = avatar1 | 2 = avatar2
 
     SDL_Event event;
-
-    // ----------- Boutons principaux -----------
-    SDL_Rect monoBtn   = {200, 200, 150, 50};
-    SDL_Rect multiBtn  = {450, 200, 150, 50};
-    SDL_Rect retourBtn = {350, 520, 120, 50};
 
     // ----------- Partie avatar -----------
     SDL_Rect avatar1 = {200, 320, 120, 50};

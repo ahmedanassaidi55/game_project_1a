@@ -15,7 +15,8 @@ typedef struct {
     char name[50];
     int score;
 } Score;
-enum menu {play,settings,save,highscores,character,enigma,back,exitgame};
+enum menu {play,settings,save,highscores,character,enigma,back,exitgame,mono,multi,confirm};
+enum element{character,icon,text};
 typedef struct button{
 	SDL_Texture *texture;
 	SDL_Rect position;
