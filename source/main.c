@@ -1,7 +1,7 @@
 #include "helper.h"
 
 int main(){
-	TTF_Font game_font = NULL;
+	TTF_Font *game_font = NULL;
 	SDL_Event event;
 	if(init_game()){
 		return 1;
@@ -17,7 +17,7 @@ int main(){
 			running =0;
 			}
 			if(event.type ==SDL_MOUSEBUTTONDOWN){
-				
+				on_button_click_goto_menu(renderer,game_font,mainMenu.buttons,7,event.motion.x,event.motion.y);
 			}
 		}
 		main_menu(renderer,game_font);

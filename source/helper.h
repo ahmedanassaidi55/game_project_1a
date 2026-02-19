@@ -9,7 +9,7 @@
 #define MAX_BUTTON_COUNT 8
 #define MAX_ELEM_COUNT 5
 #define DARK_GREY (SDL_Color){105,105,105,255}
-#define DARK_GREY (SDL_Color){200,200,200,255}
+#define LIGHT_GREY (SDL_Color){200,200,200,255}
 //definition des types
 enum menu {play,settings,save,highscores,character,enigma,back,exitgame};
 typedef struct button{
@@ -22,8 +22,8 @@ typedef struct button{
 typedef struct element{
 	SDL_Texture *texture;
 	SDL_Rect position;
-};
-struct menu{
+}element;
+struct menu_t{
 	SDL_Texture *background;
 	SDL_Rect position;
 	element elements[MAX_ELEM_COUNT];
@@ -33,13 +33,13 @@ struct menu{
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern int running;
-extern struct menu mainMenu;
+extern struct menu_t mainMenu;
 extern int main_menu_init;
 //definition des fonctions 'helper'
 int init_game();
 void exit_game();
 void init_main_menu(SDL_Renderer *renderer, TTF_Font *font);
-void on_button_click_goto_menu(SDL_Renderer *renderer,button *buttons,int count,int mouse_x,int mouse_y);
+void on_button_click_goto_menu(SDL_Renderer *renderer,TTF_Font *font,button *buttons,int count,int mouse_x,int mouse_y);
 void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer);
 void main_menu(SDL_Renderer *renderer,TTF_Font *font);
 void display_anim(SDL_Renderer *renderer);

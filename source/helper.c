@@ -1,11 +1,11 @@
 #include "helper.h"
-struct menu mainMenu;
+struct menu_t mainMenu;
 int main_menu_init = 0;
 //initialiser le jeu 
-
+SDL_Window *window = NULL;
+SDL_Renderer *renderer = NULL;
+int running = 0;
 int init_game(){
-	window = NULL;
-	renderer = NULL;
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
      	   printf("Erreur SDL_Init : %s\n", SDL_GetError());
         	return 1;
@@ -49,7 +49,7 @@ void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
 		printf("error creating surface.\n");
 		return;
 	}
-	strcpy(MainMenu.buttons[0].label,"Play");
+	strcpy(mainMenu.buttons[0].label,"Play");
 	mainMenu.buttons[0].type_menu=play;
 	strcpy(mainMenu.buttons[1].label,"Settings");
 	mainMenu.buttons[1].type_menu=settings;
@@ -125,33 +125,34 @@ void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer){
 	switch(goto_menu){
 		case play:
 			display_anim(renderer);
-			play_menu(renderer,font);
+			//play_menu(renderer,font);
 			break;
 		case settings:
 			display_anim(renderer);
-			settings_menu(renderer,font);
+			//settings_menu(renderer,font);
 			break;
 		case save:
 			display_anim(renderer);
-			save_menu(renderer,font);
+			//save_menu(renderer,font);
 			break;
 		case highscores:
 			display_anim(renderer);
-			highscores_menu(renderer,font);
+			//highscores_menu(renderer,font);
 			break;
 		case character:
 			display_anim(renderer);
-			character_menu(renderer,font);
+			//character_menu(renderer,font);
 			break;
 		case enigma:
 			display_anim(renderer);
-			enigma_menu(renderer,font);
+			//enigma_menu(renderer,font);
+			break;
 		case back:
 			display_anim(renderer);
 			main_menu(renderer,font);
 			break;
 		case exitgame:
-			exit_anim(renderer);
+			//exit_anim(renderer,font);
 			running = 0;
 			break;
 	}
@@ -159,12 +160,12 @@ void switch_menu(enum menu goto_menu,TTF_Font *font,SDL_Renderer *renderer){
 
 //detection du bouton appui
 
-void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y){
+void on_button_click_goto_menu(SDL_Renderer *renderer,TTF_Font *font,button *buttons,int count,int mouse_x,int mouse_y){
 	button *pB;
 	SDL_Point p={mouse_x,mouse_y};
 	for (pB=buttons;pB<buttons+count;pB++){
 		if(SDL_PointInRect(&p,&pB->position)){
-			switch_menu(pB->type_menu);
+			switch_menu(pB->type_menu,font,renderer);
 		}
 	}
 }
@@ -185,6 +186,26 @@ void display_anim(SDL_Renderer *renderer){
 		SDL_RenderCopy(renderer,curr_texture,NULL,NULL);
 		SDL_RenderPresent(renderer);
 		SDL_DestroyTexture(curr_texture);
-		SDL_Delay(10);
+		SDL_Delay(100);
 	}
 }
+/*
+void play_menu(SDL_Renderer *renderer,TTF_Font *font){
+	
+}
+void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
+	
+}
+void save_menu(SDL_Renderer *renderer,TTF_Font *font){
+		
+}
+void highscores_menu(SDL_Renderer *renderer,TTF_Font *font){
+	
+}
+void character_menu(SDL_Renderer *renderer,TTF_Font *font){
+	
+}
+void enigma_menu(SDL_Renderer *renderer,TTF_Font *font){
+	
+}
+*/
