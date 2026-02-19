@@ -11,50 +11,18 @@ int main(){
 		printf("font access error\n");
 		return 1;
 	}
+	main_menu(renderer,game_font);
 	while (running){
 		while(SDL_PollEvent(&event)){
 			if(event.type == SDL_QUIT){
-				running = 0;
+			running =0;
 			}
-			if(event.type == SDL_MOUSEBUTTONDOWN){
-				switch(current_menu){
-					case MENU_MAIN:
-						on_button_click_goto_menu(mainMenu.buttons, 7, event.motion.x, event.motion.y);
-						break;
-					case MENU_HIGHSCORES:
-						// Handle highscores menu clicks if needed
-						break;
-					case MENU_CHARACTER:
-						// Handle character menu clicks if needed
-						break;
-					default:
-						break;
-				}
+			if(event.type ==SDL_MOUSEBUTTONDOWN){
+				on_button_click_goto_menu(renderer,game_font,mainMenu.buttons,7,event.motion.x,event.motion.y);
 			}
 		}
-		
-		// Render based on current menu state
-		switch(current_menu){
-			case MENU_MAIN:
-				main_menu(renderer, game_font);
-				highlight_hovered(renderer, mainMenu.buttons, 7, event.motion.x, event.motion.y);
-				break;
-			case MENU_HIGHSCORES:
-				highscores_menu(renderer, game_font);
-				break;
-			case MENU_CHARACTER:
-				character_menu(renderer, game_font);
-				break;
-			case MENU_PLAY:
-			case MENU_SETTINGS:
-			case MENU_SAVE:
-				// TODO: implement remaining menus
-				main_menu(renderer, game_font);
-				break;
-			default:
-				main_menu(renderer, game_font);
-				break;
-		}
+		highlight_hovered(renderer,mainMenu.buttons,7,
+				event.motion.x,event.motion.y);
 	}
 	exit_game();
 	return 0;
