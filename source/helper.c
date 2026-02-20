@@ -2,6 +2,7 @@
 struct menu_t mainMenu;
 Mix_Chunk *music;
 int volume = 10;
+int paused = 0;
 int main_menu_init = 0;
 enum current_menu_state current_menu = MENU_MAIN;
 //initialiser le jeu 
@@ -164,6 +165,12 @@ void switch_menu(enum menu goto_menu){
 		case exitgame:
 			printf("  -> Exiting game\n");
 			running = 0;
+			break;
+		case audio_inc:
+			volume = ++volume>10?10:volume;
+			break;
+		case audio_dec:
+			volume = --volume<0?0:volume; 
 			break;
 		default:
 			printf("  -> Unknown menu type\n");

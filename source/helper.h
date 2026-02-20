@@ -43,7 +43,7 @@ struct menu_t{
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern Mix_Chunk *music;
-extern int volume;
+extern int volume,paused;
 extern int running;
 extern struct menu_t mainMenu;
 extern int main_menu_init;

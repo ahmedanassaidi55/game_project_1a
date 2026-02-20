@@ -12,7 +12,14 @@ int main(){
 		exit_game();
 		return 1;
 	}
-	music = Mix_LoadWAV("");
+	music = Mix_LoadWAV("assets/placeholdermusic.wav");
+	if(!music){
+		printf("audio access error\n");
+		Mix_FreeChunk(music);
+		exit_game();
+		}
+	Mix_Volume(-1,volume);
+	Mix_PlayChannel(-1,music,-1);
 	while (running){
 		while(SDL_PollEvent(&event)){
 			if(event.type == SDL_QUIT){
