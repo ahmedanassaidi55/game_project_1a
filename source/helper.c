@@ -152,7 +152,8 @@ void switch_menu(enum menu goto_menu){
 			current_menu = MENU_CHARACTER;
 			break;
 		case enigma:
-			//current_menu = MENU_ENIGMA;
+			printf("  -> Switching to MENU_ENIGMA\n");
+			current_menu = MENU_ENIGMA;
 			break;
 		case back:
 			printf("  -> Switching to MENU_MAIN\n");
@@ -230,14 +231,20 @@ void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 	char buffer[100];
 	for (int i = 0; i < 6; i++) {
 		sprintf(buffer, "%d. %s : %d", i+1, highscores_list[i].name, highscores_list[i].score);
-		SDL_Surface* surface = TTF_RenderText_Blended(font, buffer, LIGHT_GREY);
+		SDL_Surface* surface = TTF_RenderText_Blended(font, buffer, BLACK);
 		highscores_menu_data.elements[i].texture = SDL_CreateTextureFromSurface(renderer, surface);
-		highscores_menu_data.elements[i].position.x = 120 + ((i % 3) * 230);
-		highscores_menu_data.elements[i].position.y = 120 + ((i / 3) * 80);
-		highscores_menu_data.elements[i].position.w = surface->w;
+		highscores_menu_data.elements[i].position.x = 120 + ((i % 2) * 200);
+		highscores_menu_data.elements[i].position.y = 120 + ((i / 2) * 50);
+		highscores_menu_data.elements[i].position.w = 160;
 		highscores_menu_data.elements[i].position.h = surface->h;
 		SDL_FreeSurface(surface);
 	}
+	strcpy(highscores_menu_data.buttons[0].label,"Back");
+	highscores_menu_data.buttons[0].type_menu=back;
+	SDL_Surface *surf=TTF_RenderText_Blended(font, highscores_menu_data.buttons[0].label,BLACK);
+	highscores_menu_data.buttons[0].texture =SDL_CreateTextureFromSurface(renderer, surf);
+	highscores_menu_data.buttons[0].position =(SDL_Rect){120,290,80,20};
+	SDL_FreeSurface(surf);
 }
 
 void highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
@@ -253,8 +260,12 @@ void highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 	
 	// Draw scores
 	for(int i = 0; i < 6; i++){
-		SDL_RenderCopy(renderer, highscores_menu_data.elements[i].texture, NULL, &highscores_menu_data.elements[i].position);
+		SDL_RenderCopy(renderer,
+			highscores_menu_data.elements[i].texture, NULL,
+			&highscores_menu_data.elements[i].position);
 	}
+	SDL_RenderCopy(renderer, highscores_menu_data.buttons[0].texture,
+			NULL,&highscores_menu_data.buttons[0].position);
 	
 	SDL_RenderPresent(renderer);
 }

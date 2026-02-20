@@ -17,10 +17,17 @@ int main(){
 				running = 0;
 			}
 			if(event.type == SDL_MOUSEBUTTONDOWN){
+				on_button_click_goto_menu(mainMenu.buttons,
+					7, event.motion.x, event.motion.y);
 				switch(current_menu){
 					case MENU_MAIN:
-						on_button_click_goto_menu(mainMenu.buttons, 7, event.motion.x, event.motion.y);
+				on_button_click_goto_menu(mainMenu.buttons,
+					7, event.motion.x, event.motion.y);
 						break;
+					case MENU_HIGHSCORES:
+					on_button_click_goto_menu(
+					highscores_menu_data.buttons,
+					1, event.motion.x, event.motion.y);
 					default:
 						break;
 				}

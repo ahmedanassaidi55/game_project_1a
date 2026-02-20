@@ -10,13 +10,14 @@
 #define MAX_ELEM_COUNT 5
 #define DARK_GREY (SDL_Color){105,105,105,255}
 #define LIGHT_GREY (SDL_Color){200,200,200,255}
+#define BLACK (SDL_Color){0,0,0,255}
 //definition des types
 typedef struct {
     char name[50];
     int score;
 } Score;
 enum menu {play,settings,save,highscores,character,enigma,back,exitgame,mono,multi,confirm};
-enum current_menu_state {MENU_MAIN, MENU_HIGHSCORES, MENU_CHARACTER, MENU_PLAY, MENU_SETTINGS, MENU_SAVE};
+enum current_menu_state {MENU_MAIN, MENU_HIGHSCORES, MENU_CHARACTER, MENU_PLAY, MENU_SETTINGS,MENU_ENIGMA, MENU_SAVE};
 enum element_type{character_icon,icon,text};
 typedef struct button{
 	SDL_Texture *texture;
