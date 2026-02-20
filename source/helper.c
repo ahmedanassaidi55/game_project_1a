@@ -203,10 +203,46 @@ void display_anim(SDL_Renderer *renderer){
 /*
 void play_menu(SDL_Renderer *renderer,TTF_Font *font){
 	
-}
+}*/
+struct menu_t settings_menu_data;
+int settings_menu_init = 0;
+void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
+	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+	if(!temp_surf){
+		printf("error creating surface for highscores.\n");
+		return;
+	}
+	settings_menu_data.background = SDL_CreateTextureFromSurface(
+						renderer,temp_surf);
+	SDL_FreeSurface(temp_surf);
+	settings_menu_data.position.x = 0;
+	settings_menu_data.position.y = 0;
+	settings_menu_data.position.w = 600;
+	settings_menu_data.position.h = 358;
+	strcpy(settings_menu_data.buttons[0].label,"back");
+	settings_menu_data.buttons[0].type_menu = back;
+	strcpy(settings_menu_data.buttons[1].label,"+");
+	settings_menu_data.buttons[1].type_menu = audio_inc;
+	strcpy(settings_menu_data.buttons[2].label,"-");
+	settings_menu_data.buttons[2].type_menu = audio_dec;
+	strcpy(settings_menu_data.buttons[3].label,"O");
+	settings_menu_data.buttons[3].type_menu = fullscreen;
+	for(int i=0; i<3;i++){
+		SDL_Surface *btn_surf=TTF_RenderText_Blended(font,
+			settings_menu_data.buttons[i].label, BLACK);
+		SDL_Surface *elem_surf=TTF_RenderText_Blended(font,
+			settings_menu_data.elements[i].label, BLACK);
+		settings_menu_data.buttons[i].texture=
+		SDL_CreateTextureFromSurface(renderer,btn_surf);
+		settings_menu_data.elements[i].texture=
+		SDL_CreateTextureFromSurface(renderer,elem_surf);
+		SDL_FreeSurface(btn_surf);
+		SDL_FreeSurface(elem_surf);
+	}
+	}
 void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	
-}
+}/*
 void save_menu(SDL_Renderer *renderer,TTF_Font *font){
 		
 }*/
@@ -214,7 +250,7 @@ void save_menu(SDL_Renderer *renderer,TTF_Font *font){
 struct menu_t highscores_menu_data;
 int highscores_menu_init = 0;
 Score highscores_list[6] = {{"Ahmed", 1500}, {"Sami", 1200}, {"Amira", 900},{"Ali",750},{"Khaled",500},{"Wissem",400}};
-
+//va etre remplacer par une propre fonction a trouver les scores
 void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
 	if(!temp_surf){

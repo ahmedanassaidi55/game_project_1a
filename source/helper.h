@@ -16,9 +16,10 @@ typedef struct {
     char name[50];
     int score;
 } Score;
-enum menu {play,settings,save,highscores,character,enigma,back,exitgame,mono,multi,confirm};
+enum menu {play,settings,save,highscores,character,enigma,back,exitgame,
+	mono,multi,confirm,
+	audio_inc,audio_dec,fullscreen};
 enum current_menu_state {MENU_MAIN, MENU_HIGHSCORES, MENU_CHARACTER, MENU_PLAY, MENU_SETTINGS,MENU_ENIGMA, MENU_SAVE};
-enum element_type{character_icon,icon,text};
 typedef struct button{
 	SDL_Texture *texture;
 	SDL_Texture *texture_hovered;
@@ -30,6 +31,7 @@ typedef struct button{
 typedef struct element{
 	SDL_Texture *texture;
 	SDL_Rect position;
+	char label[20];
 }element;
 struct menu_t{
 	SDL_Texture *background;
@@ -47,9 +49,12 @@ extern struct menu_t highscores_menu_data;
 extern int highscores_menu_init;
 extern struct menu_t character_menu_data;
 extern int character_menu_init;
+extern struct menu_t settings_menu_data;
+extern int settings_menu_init;
 extern int character_mode;
 extern int character_avatar_choice;
-extern enum current_menu_state current_menu;//definition des fonctions 'helper'
+extern enum current_menu_state current_menu;
+//definition des fonctions 'helper'
 int init_game();
 void exit_game();
 void init_main_menu(SDL_Renderer *renderer, TTF_Font *font);
