@@ -249,7 +249,7 @@ void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	strcpy(settings_menu_data.elements[3].label,"||||||||||");
 	settings_menu_data.elements[3].position.x = 130;
 	settings_menu_data.elements[3].position.y = 130;
-	for(int i=0; i<3;i++){
+	for(int i=0; i<4;i++){
 		SDL_Surface *btn_surf=TTF_RenderText_Blended(font,
 			settings_menu_data.buttons[i].label, BLACK);
 		settings_menu_data.buttons[i].texture=
@@ -284,7 +284,7 @@ void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 			settings_menu_data.elements[i].texture, NULL,
 			&settings_menu_data.elements[i].position);
 	}
-	for(int i = 0; i<3;i++){
+	for(int i = 0; i<4;i++){
 		SDL_RenderCopy(renderer, 
 			highscores_menu_data.buttons[i].texture,NULL,
 			&highscores_menu_data.buttons[i].position);
