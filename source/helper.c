@@ -1,7 +1,7 @@
 #include "helper.h"
 struct menu_t mainMenu;
 Mix_Chunk *music;
-volume = 10;
+int volume = 10;
 int main_menu_init = 0;
 enum current_menu_state current_menu = MENU_MAIN;
 //initialiser le jeu 

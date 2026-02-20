@@ -12,7 +12,7 @@ int main(){
 		exit_game();
 		return 1;
 	}
-	music = Mix_LoadWAV();
+	music = Mix_LoadWAV("");
 	while (running){
 		while(SDL_PollEvent(&event)){
 			if(event.type == SDL_QUIT){
