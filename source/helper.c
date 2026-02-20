@@ -221,28 +221,77 @@ void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	settings_menu_data.position.h = 358;
 	strcpy(settings_menu_data.buttons[0].label,"back");
 	settings_menu_data.buttons[0].type_menu = back;
+	settings_menu_data.buttons[0].position.x = 390;
+	settings_menu_data.buttons[0].position.y = 270;
 	strcpy(settings_menu_data.buttons[1].label,"+");
 	settings_menu_data.buttons[1].type_menu = audio_inc;
+	settings_menu_data.buttons[1].position.x = 290;
+	settings_menu_data.buttons[1].position.y = 130;
 	strcpy(settings_menu_data.buttons[2].label,"-");
 	settings_menu_data.buttons[2].type_menu = audio_dec;
+	settings_menu_data.buttons[2].position.x = 200;
+	settings_menu_data.buttons[2].position.y = 130;
 	strcpy(settings_menu_data.buttons[3].label,"O");
 	settings_menu_data.buttons[3].type_menu = fullscreen;
+	settings_menu_data.buttons[3].position.x = 200;
+	settings_menu_data.buttons[3].position.y = 180;
+	strcpy(settings_menu_data.elements[0].label,"Settings");
+	settings_menu_data.elements[0].position.x = 150;
+	settings_menu_data.elements[0].position.y = 75;
+	strcpy(settings_menu_data.elements[1].label,"Volume");
+	settings_menu_data.elements[1].position.x = 120;
+	settings_menu_data.elements[1].position.y = 130;
+	strcpy(settings_menu_data.elements[2].label,"Full Screen");
+	settings_menu_data.elements[2].position.x = 120;
+	settings_menu_data.elements[2].position.y = 200;
+	strcpy(settings_menu_data.elements[3].label,"||||||||||");
+	settings_menu_data.elements[3].position.x = 130;
+	settings_menu_data.elements[3].position.y = 130;
 	for(int i=0; i<3;i++){
 		SDL_Surface *btn_surf=TTF_RenderText_Blended(font,
 			settings_menu_data.buttons[i].label, BLACK);
-		SDL_Surface *elem_surf=TTF_RenderText_Blended(font,
-			settings_menu_data.elements[i].label, BLACK);
 		settings_menu_data.buttons[i].texture=
 		SDL_CreateTextureFromSurface(renderer,btn_surf);
-		settings_menu_data.elements[i].texture=
-		SDL_CreateTextureFromSurface(renderer,elem_surf);
+		settings_menu_data.buttons[i].position.w = btn_surf->w;
+		settings_menu_data.buttons[i].position.h = btn_surf->h;
 		SDL_FreeSurface(btn_surf);
+	}
+	for(int i=0; i<4;i++){
+		SDL_Surface *elem_surf=TTF_RenderText_Blended(font,
+			settings_menu_data.elements[i].label, BLACK);
+		settings_menu_data.elements[i].texture=
+			SDL_CreateTextureFromSurface(renderer,elem_surf);
+		settings_menu_data.elements[i].position.w = elem_surf->w;
+		settings_menu_data.elements[i].position.h = elem_surf->h;
 		SDL_FreeSurface(elem_surf);
 	}
-	}
+}
 void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
+	if(!settings_menu_init){
+		init_settings_menu(renderer,font);
+	}
+	SDL_RenderClear(renderer);
 	
-}/*
+	// Draw background
+	SDL_RenderCopy(renderer, settings_menu_data.background, NULL,
+					&settings_menu_data.position);
+	
+	// Draw scores
+	for(int i = 0; i < 4; i++){
+		SDL_RenderCopy(renderer,
+			settings_menu_data.elements[i].texture, NULL,
+			&settings_menu_data.elements[i].position);
+	}
+	for(int i = 0; i<3;i++){
+		SDL_RenderCopy(renderer, 
+			highscores_menu_data.buttons[i].texture,NULL,
+			&highscores_menu_data.buttons[i].position);
+	}
+	SDL_RenderPresent(renderer);
+}
+
+
+/*
 void save_menu(SDL_Renderer *renderer,TTF_Font *font){
 		
 }*/

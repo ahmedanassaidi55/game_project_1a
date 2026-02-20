@@ -28,6 +28,12 @@ int main(){
 					on_button_click_goto_menu(
 					highscores_menu_data.buttons,
 					1, event.motion.x, event.motion.y);
+						break;
+					case MENU_SETTINGS:
+					on_button_click_goto_menu(
+					settings_menu_data.buttons,
+					1, event.motion.x, event.motion.y);
+						break;
 					default:
 						break;
 				}
@@ -48,6 +54,8 @@ int main(){
 				break;
 			case MENU_PLAY:
 			case MENU_SETTINGS:
+				settings_menu(renderer,game_font);
+				break;
 			case MENU_SAVE:
 				// TODO: implement remaining menus
 				main_menu(renderer, game_font);
