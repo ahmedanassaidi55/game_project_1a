@@ -129,32 +129,41 @@ void exit_game(){
 //changement de menu
 
 void switch_menu(enum menu goto_menu){
+	printf("switch_menu called with: %d\n", goto_menu);
 	switch(goto_menu){
 		case play:
+			printf("  -> Switching to MENU_PLAY\n");
 			current_menu = MENU_PLAY;
 			break;
 		case settings:
+			printf("  -> Switching to MENU_SETTINGS\n");
 			current_menu = MENU_SETTINGS;
 			break;
 		case save:
+			printf("  -> Switching to MENU_SAVE\n");
 			current_menu = MENU_SAVE;
 			break;
 		case highscores:
+			printf("  -> Switching to MENU_HIGHSCORES\n");
 			current_menu = MENU_HIGHSCORES;
 			break;
 		case character:
+			printf("  -> Switching to MENU_CHARACTER\n");
 			current_menu = MENU_CHARACTER;
 			break;
 		case enigma:
 			//current_menu = MENU_ENIGMA;
 			break;
 		case back:
+			printf("  -> Switching to MENU_MAIN\n");
 			current_menu = MENU_MAIN;
 			break;
 		case exitgame:
+			printf("  -> Exiting game\n");
 			running = 0;
 			break;
 		default:
+			printf("  -> Unknown menu type\n");
 			break;
 	}
 }
