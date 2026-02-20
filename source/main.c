@@ -62,11 +62,11 @@ int main(){
 				character_menu(renderer, game_font);
 				break;
 			case MENU_PLAY:
+				break;
 			case MENU_SETTINGS:
 				settings_menu(renderer,game_font);
 				break;
 			case MENU_SAVE:
-				// TODO: implement remaining menus
 				main_menu(renderer, game_font);
 				break;
 			default:

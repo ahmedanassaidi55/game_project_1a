@@ -278,14 +278,13 @@ void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	if(!settings_menu_init){
 		init_settings_menu(renderer,font);
+		settings_menu_init = 1;
 	}
 	SDL_RenderClear(renderer);
 	
-	// Draw background
 	SDL_RenderCopy(renderer, settings_menu_data.background, NULL,
 					&settings_menu_data.position);
 	
-	// Draw scores
 	for(int i = 0; i < 4; i++){
 		SDL_RenderCopy(renderer,
 			settings_menu_data.elements[i].texture, NULL,
