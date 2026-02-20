@@ -1,5 +1,7 @@
 #include "helper.h"
 struct menu_t mainMenu;
+Mix_Chunk *music;
+volume = 10;
 int main_menu_init = 0;
 enum current_menu_state current_menu = MENU_MAIN;
 //initialiser le jeu 
@@ -377,18 +379,24 @@ void init_character_menu(SDL_Renderer *renderer, TTF_Font *font){
 	character_menu_data.buttons[0].position = (SDL_Rect){120, 80, 160, 40};
 	strcpy(character_menu_data.buttons[1].label, "Multiplayer");
 	character_menu_data.buttons[1].position = (SDL_Rect){330, 80, 160, 40};
-	strcpy(character_menu_data.buttons[2].label, "Avatar 1");
-	character_menu_data.buttons[2].position = (SDL_Rect){100, 150, 160, 160};
-	strcpy(character_menu_data.buttons[3].label, "Avatar 2");
-	character_menu_data.buttons[3].position = (SDL_Rect){340, 150, 160, 160};
-	strcpy(character_menu_data.buttons[4].label, "Confirm");
-	character_menu_data.buttons[4].position = (SDL_Rect){225, 320, 150, 30};
-	strcpy(character_menu_data.buttons[5].label, "Back");
-	character_menu_data.buttons[5].position = (SDL_Rect){10, 10, 80, 30};
+	strcpy(character_menu_data.elements[0].label, "Avatar 1");
+	character_menu_data.elements[0].position = (SDL_Rect){100, 80, 160, 160};
+	strcpy(character_menu_data.elements[1].label, "Avatar 2");
+	character_menu_data.elements[1].position = (SDL_Rect){330, 80, 160, 160};
+	strcpy(character_menu_data.buttons[2].label, "Confirm");
+	character_menu_data.buttons[2].position = (SDL_Rect){225, 320, 150, 30};
+	strcpy(character_menu_data.buttons[3].label, "Back");
+	character_menu_data.buttons[3].type_menu = back;
+	character_menu_data.buttons[3].position = (SDL_Rect){10, 10, 80, 30};
 	
-	for(int i = 0; i < 6; i++){
-		SDL_Surface *btn_surface = TTF_RenderText_Blended(font, character_menu_data.buttons[i].label, DARK_GREY);
+	for(int i = 0; i < 4; i++){
+		SDL_Surface *btn_surface = TTF_RenderText_Blended(font, character_menu_data.buttons[i].label, BLACK);
 		character_menu_data.buttons[i].texture = SDL_CreateTextureFromSurface(renderer, btn_surface);
+		SDL_FreeSurface(btn_surface);
+	}
+	for(int i = 0; i < 2; i++){
+		SDL_Surface *btn_surface = TTF_RenderText_Blended(font, character_menu_data.elements[i].label, BLACK);
+		character_menu_data.elements[i].texture = SDL_CreateTextureFromSurface(renderer, btn_surface);
 		SDL_FreeSurface(btn_surface);
 	}
 }
@@ -417,14 +425,14 @@ void character_menu(SDL_Renderer *renderer, TTF_Font *font){
 			SDL_SetRenderDrawColor(renderer, 255, 140, 0, 255);
 		else
 			SDL_SetRenderDrawColor(renderer, 200, 200, 100, 255);
-		SDL_RenderFillRect(renderer, &character_menu_data.buttons[2].position);
+		SDL_RenderFillRect(renderer, &character_menu_data.elements[0].position);
 		
 		// Avatar 2
 		if(character_avatar_choice == 2)
 			SDL_SetRenderDrawColor(renderer, 255, 140, 0, 255);
 		else
 			SDL_SetRenderDrawColor(renderer, 200, 200, 100, 255);
-		SDL_RenderFillRect(renderer, &character_menu_data.buttons[3].position);
+		SDL_RenderFillRect(renderer, &character_menu_data.elements[1].position);
 		
 		// Confirm button
 		if(character_avatar_choice != 0)

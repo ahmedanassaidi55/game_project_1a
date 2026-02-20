@@ -9,8 +9,10 @@ int main(){
 	game_font = TTF_OpenFont("assets/dogicapixel.ttf",24);
 	if(!game_font){
 		printf("font access error\n");
+		exit_game();
 		return 1;
 	}
+	music = Mix_LoadWAV();
 	while (running){
 		while(SDL_PollEvent(&event)){
 			if(event.type == SDL_QUIT){
