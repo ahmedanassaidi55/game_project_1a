@@ -26,8 +26,6 @@ int main(){
 				running = 0;
 			}
 			if(event.type == SDL_MOUSEBUTTONDOWN){
-				on_button_click_goto_menu(mainMenu.buttons,
-					7, event.motion.x, event.motion.y);
 				switch(current_menu){
 					case MENU_MAIN:
 				on_button_click_goto_menu(mainMenu.buttons,
