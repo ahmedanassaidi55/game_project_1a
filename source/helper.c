@@ -292,8 +292,8 @@ void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	}
 	for(int i = 0; i<4;i++){
 		SDL_RenderCopy(renderer, 
-			highscores_menu_data.buttons[i].texture,NULL,
-			&highscores_menu_data.buttons[i].position);
+			settings_menu_data.buttons[i].texture,NULL,
+			&settings_menu_data.buttons[i].position);
 	}
 	SDL_RenderPresent(renderer);
 }
