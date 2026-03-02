@@ -88,6 +88,7 @@ void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
 		mainMenu.buttons[i].position.y=90+i*30;
 		mainMenu.buttons[i].position.h=button_surface->h;
 		mainMenu.buttons[i].position.w=button_surface->w>160?160:button_surface->w;
+		SDL_FreeSurface(button_surface);
 	}
 	
 }
@@ -221,6 +222,11 @@ void switch_menu(enum menu goto_menu,TTF_Font *font){
 		case confirm:
 			printf("chose character %d\n",character_avatar_choice);
 			break;
+		case quiz:
+		quiz_active = 1;
+		break;
+		case puzzle:
+		break;
 		default:
 			printf("  -> Unknown menu type\n");
 			break;
@@ -314,6 +320,9 @@ void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 		settings_menu_data.buttons[i].position.w = btn_surf->w;
 		settings_menu_data.buttons[i].position.h = btn_surf->h;
 		SDL_FreeSurface(btn_surf);
+		SDL_Surface *surf = TTF_RenderText_Blended(font, settings_menu_data.buttons[i].label, LIGHT_GREY);
+        settings_menu_data.buttons[i].texture_hovered = SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_FreeSurface(surf);
 	}
 	for(int i=0; i<3;i++){
 		SDL_Surface *elem_surf=TTF_RenderText_Blended(font,
@@ -403,6 +412,9 @@ void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 	highscores_menu_data.buttons[0].texture =SDL_CreateTextureFromSurface(renderer, surf);
 	highscores_menu_data.buttons[0].position =(SDL_Rect){120,270,80,20};
 	SDL_FreeSurface(surf);
+	surf = TTF_RenderText_Blended(font, highscores_menu_data.buttons[0].label, LIGHT_GREY);
+        highscores_menu_data.buttons[0].texture_hovered = SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_FreeSurface(surf);
 }
 
 void highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
@@ -468,6 +480,9 @@ void init_character_menu(SDL_Renderer *renderer, TTF_Font *font){
 		SDL_Surface *btn_surface = TTF_RenderText_Blended(font, character_menu_data.buttons[i].label, BLACK);
 		character_menu_data.buttons[i].texture = SDL_CreateTextureFromSurface(renderer, btn_surface);
 		SDL_FreeSurface(btn_surface);
+		SDL_Surface *surf = TTF_RenderText_Blended(font, character_menu_data.buttons[i].label, LIGHT_GREY);
+        character_menu_data.buttons[i].texture_hovered = SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_FreeSurface(surf);
 	}
 	for(int i = 0; i < 2; i++){
 		SDL_Surface *btn_surface = TTF_RenderText_Blended(font, character_menu_data.elements[i].label, BLACK);
@@ -531,14 +546,13 @@ void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
 
     // Boutons Quiz et Puzzle
     strcpy(enigma_menu_data.buttons[0].label,"Quiz");
-    enigma_menu_data.buttons[0].type_menu = play; // on traitera dans handle_events
+    enigma_menu_data.buttons[0].type_menu = quiz; 
     enigma_menu_data.buttons[0].position = (SDL_Rect){180,150,100,40};
 
     strcpy(enigma_menu_data.buttons[1].label,"Puzzle");
-    enigma_menu_data.buttons[1].type_menu = play; // Placeholder
+    enigma_menu_data.buttons[1].type_menu = puzzle;
     enigma_menu_data.buttons[1].position = (SDL_Rect){320,150,100,40};
 
-    // Textures des boutons
     for(int i=0;i<2;i++){
         SDL_Surface *surf = TTF_RenderText_Blended(font, enigma_menu_data.buttons[i].label, DARK_GREY);
         enigma_menu_data.buttons[i].texture = SDL_CreateTextureFromSurface(renderer,surf);
@@ -550,30 +564,17 @@ void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
     }
     enigma_menu_init = 1;
 }
-
 int quiz_active = 0;
 SDL_Rect quiz_band = {50,50,500,60};
 SDL_Rect ans_buttons[3] = {{100,150,150,40},{225,150,150,40},{350,150,150,40}};
 char *quiz_question = "*****"; // Question placeholder
 char *quiz_answers[3] = {"*****","*****","*****"};
 
-void enigma_menu(SDL_Renderer *renderer, TTF_Font *font, int mouse_x, int mouse_y){
+void enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
     if(!enigma_menu_init) init_enigma_menu(renderer,font);
 
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer,enigma_menu_data.background,NULL,&enigma_menu_data.position);
-
-    SDL_Point p = {mouse_x,mouse_y};
-    for(int i=0;i<2;i++){
-        if(SDL_PointInRect(&p,&enigma_menu_data.buttons[i].position)){
-            SDL_RenderCopy(renderer,enigma_menu_data.buttons[i].texture_hovered,NULL,&enigma_menu_data.buttons[i].position);
-            Mix_PlayChannel(-1,hover_sound,0);
-        } else {
-            SDL_RenderCopy(renderer,enigma_menu_data.buttons[i].texture,NULL,&enigma_menu_data.buttons[i].position);
-        }
-    }
-
-    // Si Quiz actif
     if(quiz_active){
         // Bande pour question
         SDL_SetRenderDrawColor(renderer,0,0,0,200);
@@ -584,7 +585,6 @@ void enigma_menu(SDL_Renderer *renderer, TTF_Font *font, int mouse_x, int mouse_
         SDL_RenderCopy(renderer,q_tex,NULL,&quiz_band);
         SDL_DestroyTexture(q_tex);
 
-        // Boutons réponses
         for(int i=0;i<3;i++){
             SDL_Surface *ans_surf = TTF_RenderText_Blended(font,quiz_answers[i],DARK_GREY);
             SDL_Texture *ans_tex = SDL_CreateTextureFromSurface(renderer,ans_surf);
@@ -598,25 +598,7 @@ void enigma_menu(SDL_Renderer *renderer, TTF_Font *font, int mouse_x, int mouse_
     SDL_RenderPresent(renderer);
 }
 
-void handle_enigma_events(SDL_Event *event){
-    if(event->type==SDL_KEYDOWN && event->key.keysym.sym==SDLK_ESCAPE){
-        running=0; // quitter le jeu
-    }
-    if(event->type==SDL_MOUSEBUTTONDOWN){
-        int x=event->button.x;
-        int y=event->button.y;
-        SDL_Point p={x,y};
-        // Quiz bouton
-        if(SDL_PointInRect(&p,&enigma_menu_data.buttons[0].position)){
-            quiz_active=1;
-        }
-        // Puzzle bouton
-        if(SDL_PointInRect(&p,&enigma_menu_data.buttons[1].position)){
-            quiz_active=0; // placeholder
-        }
-    }
-}
-/*void highlight_hovered(SDL_Renderer *renderer,
+void highlight_hovered(SDL_Renderer *renderer,
                        button *buttons,
                        int btn_count,
                        int mouse_x,
@@ -648,4 +630,4 @@ void handle_enigma_events(SDL_Event *event){
     }
 
     SDL_RenderPresent(renderer);
-}*/
+}

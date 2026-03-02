@@ -1,3 +1,5 @@
+#ifndef HELPER_C
+#define HELPER_C
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,6 +13,7 @@
 #define DARK_GREY (SDL_Color){105,105,105,255}
 #define LIGHT_GREY (SDL_Color){200,200,200,255}
 #define BLACK (SDL_Color){0,0,0,255}
+#define WHITE (SDL_Color){255,255,255,255}
 //definition des types
 typedef struct {
     char name[50];
@@ -18,6 +21,7 @@ typedef struct {
 } Score;
 enum menu {play,settings,save,highscores,character,enigma,back,exitgame,
 	mono,multi,confirm,character1,character2,
+	quiz,puzzle,correctAns,
 	audio_inc,audio_dec,fullscreen};
 enum current_menu_state {MENU_MAIN, MENU_HIGHSCORES, MENU_CHARACTER, MENU_PLAY, MENU_SETTINGS,MENU_ENIGMA, MENU_SAVE};
 typedef struct button{
@@ -53,7 +57,8 @@ extern struct menu_t character_menu_data;
 extern int character_menu_init;
 extern struct menu_t settings_menu_data;
 extern struct menu_t enigma_menu_data;
-extern int enigma_menu_init = 0;
+extern int enigma_menu_init;
+extern int quiz_active;
 extern int settings_menu_init;
 extern int character_mode;
 extern int character_avatar_choice;
@@ -64,6 +69,7 @@ void exit_game();
 void init_main_menu(SDL_Renderer *renderer, TTF_Font *font);
 void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font);
 void init_character_menu(SDL_Renderer *renderer, TTF_Font *font);
+void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font);
 void highlight_hovered(SDL_Renderer *renderer,button * buttons,int btn_count,int mouse_x, int mouse_y);
 void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y,TTF_Font *font);
 void switch_menu(enum menu goto_menu,TTF_Font *font);
@@ -76,3 +82,4 @@ void highscores_menu(SDL_Renderer *renderer,TTF_Font *font);
 void character_menu(SDL_Renderer *renderer,TTF_Font *font);
 void enigma_menu(SDL_Renderer *renderer,TTF_Font *font);
 void exit_anim(SDL_Renderer *renderer,TTF_Font *font);
+#endif
