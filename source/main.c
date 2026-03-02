@@ -18,7 +18,7 @@ int main(){
 		Mix_FreeChunk(music);
 		exit_game();
 		}
-	Mix_Volume(-1,volume);
+	Mix_Volume(-1,volume*13);
 	Mix_PlayChannel(-1,music,-1);
 	while (running){
 		while(SDL_PollEvent(&event)){
@@ -29,17 +29,17 @@ int main(){
 				switch(current_menu){
 					case MENU_MAIN:
 				on_button_click_goto_menu(mainMenu.buttons,
-					7, event.motion.x, event.motion.y);
+					7, event.motion.x, event.motion.y,game_font);
 						break;
 					case MENU_HIGHSCORES:
 					on_button_click_goto_menu(
 					highscores_menu_data.buttons,
-					1, event.motion.x, event.motion.y);
+					1, event.motion.x, event.motion.y,game_font);
 						break;
 					case MENU_SETTINGS:
 					on_button_click_goto_menu(
 					settings_menu_data.buttons,
-					1, event.motion.x, event.motion.y);
+					4, event.motion.x, event.motion.y,game_font);
 						break;
 					default:
 						break;

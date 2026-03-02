@@ -1,7 +1,7 @@
 #include "helper.h"
 struct menu_t mainMenu;
 Mix_Chunk *music;
-int volume = 10;
+int volume = 5;
 int paused = 0;
 int main_menu_init = 0;
 enum current_menu_state current_menu = MENU_MAIN;
@@ -131,7 +131,7 @@ void exit_game(){
 
 //changement de menu
 
-void switch_menu(enum menu goto_menu){
+void switch_menu(enum menu goto_menu,TTF_Font *font){
 	printf("switch_menu called with: %d\n", goto_menu);
 	switch(goto_menu){
 		case play:
@@ -167,11 +167,45 @@ void switch_menu(enum menu goto_menu){
 			running = 0;
 			break;
 		case audio_inc:
-			volume = ++volume>10?10:volume;
+			volume++;
+			volume = volume>10?10:volume;
+			Mix_Volume(-1,volume*13);
+			SDL_Surface *elem_surf=TTF_RenderText_Blended(font,
+		settings_menu_data.elements[3].label+(10-volume), BLACK);
+	settings_menu_data.elements[3].texture=
+		SDL_CreateTextureFromSurface(renderer,elem_surf);
+	settings_menu_data.elements[3].position.w = elem_surf->w;
+	settings_menu_data.elements[3].position.h = elem_surf->h;
+	SDL_FreeSurface(elem_surf);
 			break;
 		case audio_dec:
-			volume = --volume<0?0:volume; 
+			volume--;
+			volume = volume<1?1:volume;
+			Mix_Volume(-1,volume*13);
+			SDL_Surface *elemsurf=TTF_RenderText_Blended(font,
+		settings_menu_data.elements[3].label+(10-volume), BLACK);
+		settings_menu_data.elements[3].texture=
+		SDL_CreateTextureFromSurface(renderer,elemsurf);
+		settings_menu_data.elements[3].position.w = elemsurf->w;
+		settings_menu_data.elements[3].position.h = elemsurf->h;
+		SDL_FreeSurface(elemsurf);
 			break;
+		case fullscreen:
+		if(SDL_GetWindowFlags(window)&SDL_WINDOW_FULLSCREEN || SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP){
+		strcpy(settings_menu_data.buttons[3].label,"O");
+		SDL_SetWindowFullscreen(window,0);
+		}else{
+		strcpy(settings_menu_data.buttons[3].label,"X");
+		SDL_SetWindowFullscreen(window,SDL_WINDOW_FULLSCREEN);
+		}
+		SDL_Surface *btn_surf=TTF_RenderText_Blended(font,
+			settings_menu_data.buttons[3].label, BLACK);
+		settings_menu_data.buttons[3].texture=
+		SDL_CreateTextureFromSurface(renderer,btn_surf);
+		settings_menu_data.buttons[3].position.w = btn_surf->w;
+		settings_menu_data.buttons[3].position.h = btn_surf->h;
+		SDL_FreeSurface(btn_surf);
+		break;
 		default:
 			printf("  -> Unknown menu type\n");
 			break;
@@ -180,12 +214,13 @@ void switch_menu(enum menu goto_menu){
 
 //detection du bouton appui
 
-void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y){
+void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y,TTF_Font *font){
 	button *pB;
 	SDL_Point p={mouse_x,mouse_y};
 	for (pB=buttons;pB<buttons+count;pB++){
 		if(SDL_PointInRect(&p,&pB->position)){
-			switch_menu(pB->type_menu);
+			switch_menu(pB->type_menu,font);
+			break;
 		}
 	}
 }
@@ -234,11 +269,11 @@ void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	settings_menu_data.buttons[0].position.y = 270;
 	strcpy(settings_menu_data.buttons[1].label,"+");
 	settings_menu_data.buttons[1].type_menu = audio_inc;
-	settings_menu_data.buttons[1].position.x = 290;
+	settings_menu_data.buttons[1].position.x = 450;
 	settings_menu_data.buttons[1].position.y = 130;
 	strcpy(settings_menu_data.buttons[2].label,"-");
 	settings_menu_data.buttons[2].type_menu = audio_dec;
-	settings_menu_data.buttons[2].position.x = 200;
+	settings_menu_data.buttons[2].position.x = 340;
 	settings_menu_data.buttons[2].position.y = 130;
 	strcpy(settings_menu_data.buttons[3].label,"O");
 	settings_menu_data.buttons[3].type_menu = fullscreen;
@@ -254,7 +289,7 @@ void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	settings_menu_data.elements[2].position.x = 120;
 	settings_menu_data.elements[2].position.y = 200;
 	strcpy(settings_menu_data.elements[3].label,"||||||||||");
-	settings_menu_data.elements[3].position.x = 130;
+	settings_menu_data.elements[3].position.x = 360;
 	settings_menu_data.elements[3].position.y = 130;
 	for(int i=0; i<4;i++){
 		SDL_Surface *btn_surf=TTF_RenderText_Blended(font,
@@ -265,7 +300,7 @@ void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 		settings_menu_data.buttons[i].position.h = btn_surf->h;
 		SDL_FreeSurface(btn_surf);
 	}
-	for(int i=0; i<4;i++){
+	for(int i=0; i<3;i++){
 		SDL_Surface *elem_surf=TTF_RenderText_Blended(font,
 			settings_menu_data.elements[i].label, BLACK);
 		settings_menu_data.elements[i].texture=
@@ -274,6 +309,14 @@ void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 		settings_menu_data.elements[i].position.h = elem_surf->h;
 		SDL_FreeSurface(elem_surf);
 	}
+	SDL_Surface *elem_surf=TTF_RenderText_Blended(font,
+		settings_menu_data.elements[3].label+(10-volume), BLACK);
+	settings_menu_data.elements[3].texture=
+		SDL_CreateTextureFromSurface(renderer,elem_surf);
+	settings_menu_data.elements[3].position.w = elem_surf->w;
+	settings_menu_data.elements[3].position.h = elem_surf->h;
+	SDL_FreeSurface(elem_surf);
+	
 }
 void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	if(!settings_menu_init){
