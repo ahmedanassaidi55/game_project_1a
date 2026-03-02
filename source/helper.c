@@ -205,7 +205,22 @@ void switch_menu(enum menu goto_menu,TTF_Font *font){
 		settings_menu_data.buttons[3].position.w = btn_surf->w;
 		settings_menu_data.buttons[3].position.h = btn_surf->h;
 		SDL_FreeSurface(btn_surf);
-		break;
+			break;
+		case mono:
+			character_mode = 1;
+			break;
+		case multi:
+			character_mode = 2;
+			break;
+		case character1:
+			character_avatar_choice = 1;
+			break;
+		case character2:
+			character_avatar_choice = 2;
+			break;
+		case confirm:
+			printf("chose character %d\n",character_avatar_choice);
+			break;
 		default:
 			printf("  -> Unknown menu type\n");
 			break;
@@ -277,16 +292,16 @@ void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	settings_menu_data.buttons[2].position.y = 130;
 	strcpy(settings_menu_data.buttons[3].label,"O");
 	settings_menu_data.buttons[3].type_menu = fullscreen;
-	settings_menu_data.buttons[3].position.x = 200;
-	settings_menu_data.buttons[3].position.y = 180;
+	settings_menu_data.buttons[3].position.x = 400;
+	settings_menu_data.buttons[3].position.y = 200;
 	strcpy(settings_menu_data.elements[0].label,"Settings");
-	settings_menu_data.elements[0].position.x = 150;
+	settings_menu_data.elements[0].position.x = 130;
 	settings_menu_data.elements[0].position.y = 75;
 	strcpy(settings_menu_data.elements[1].label,"Volume");
-	settings_menu_data.elements[1].position.x = 120;
+	settings_menu_data.elements[1].position.x = 105;
 	settings_menu_data.elements[1].position.y = 130;
-	strcpy(settings_menu_data.elements[2].label,"Full Screen");
-	settings_menu_data.elements[2].position.x = 120;
+	strcpy(settings_menu_data.elements[2].label,"FullScreen");
+	settings_menu_data.elements[2].position.x = 105;
 	settings_menu_data.elements[2].position.y = 200;
 	strcpy(settings_menu_data.elements[3].label,"||||||||||");
 	settings_menu_data.elements[3].position.x = 360;
@@ -349,13 +364,20 @@ void save_menu(SDL_Renderer *renderer,TTF_Font *font){
 
 struct menu_t highscores_menu_data;
 int highscores_menu_init = 0;
-Score highscores_list[6] = {{"Ahmed", 1500}, {"Sami", 1200}, {"Amira", 900},{"Ali",750},{"Khaled",500},{"Wissem",400}};
+Score highscores_list[6];
 //va etre remplacer par une propre fonction a trouver les scores
 void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface for highscores.\n");
 		return;
+	}
+	FILE* f = fopen("saves/highscores.txt","r");
+	if(!f){
+		printf("couldn't find highscores\n");
+	}
+	for(int i = 0;i<6;i++){
+	fscanf(f,"%s %d",highscores_list[i].name,&highscores_list[i].score);
 	}
 	highscores_menu_data.background = SDL_CreateTextureFromSurface(renderer, temp_surf);
 	SDL_FreeSurface(temp_surf);
@@ -367,19 +389,19 @@ void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 	char buffer[100];
 	for (int i = 0; i < 6; i++) {
 		sprintf(buffer, "%d. %s : %d", i+1, highscores_list[i].name, highscores_list[i].score);
-		SDL_Surface* surface = TTF_RenderText_Blended(font, buffer, BLACK);
+		SDL_Surface* surface = TTF_RenderText_Blended(font, buffer, (SDL_Color){255,255,255,255});
 		highscores_menu_data.elements[i].texture = SDL_CreateTextureFromSurface(renderer, surface);
 		highscores_menu_data.elements[i].position.x = 120 + ((i % 2) * 200);
 		highscores_menu_data.elements[i].position.y = 120 + ((i / 2) * 50);
 		highscores_menu_data.elements[i].position.w = 160;
-		highscores_menu_data.elements[i].position.h = surface->h;
+		highscores_menu_data.elements[i].position.h = 21;
 		SDL_FreeSurface(surface);
 	}
 	strcpy(highscores_menu_data.buttons[0].label,"Back");
 	highscores_menu_data.buttons[0].type_menu=back;
 	SDL_Surface *surf=TTF_RenderText_Blended(font, highscores_menu_data.buttons[0].label,BLACK);
 	highscores_menu_data.buttons[0].texture =SDL_CreateTextureFromSurface(renderer, surf);
-	highscores_menu_data.buttons[0].position =(SDL_Rect){120,290,80,20};
+	highscores_menu_data.buttons[0].position =(SDL_Rect){120,270,80,20};
 	SDL_FreeSurface(surf);
 }
 
@@ -425,18 +447,22 @@ void init_character_menu(SDL_Renderer *renderer, TTF_Font *font){
 	character_menu_data.position.h = 358;
 	
 	strcpy(character_menu_data.buttons[0].label, "Singleplayer");
-	character_menu_data.buttons[0].position = (SDL_Rect){120, 80, 160, 40};
+	character_menu_data.buttons[0].type_menu = mono;
+	character_menu_data.buttons[0].position = (SDL_Rect){160, 250, 80, 21};
 	strcpy(character_menu_data.buttons[1].label, "Multiplayer");
-	character_menu_data.buttons[1].position = (SDL_Rect){330, 80, 160, 40};
-	strcpy(character_menu_data.elements[0].label, "Avatar 1");
-	character_menu_data.elements[0].position = (SDL_Rect){100, 80, 160, 160};
-	strcpy(character_menu_data.elements[1].label, "Avatar 2");
-	character_menu_data.elements[1].position = (SDL_Rect){330, 80, 160, 160};
+	character_menu_data.buttons[1].type_menu = multi;
+	character_menu_data.buttons[1].position = (SDL_Rect){370, 250, 80, 21};
 	strcpy(character_menu_data.buttons[2].label, "Confirm");
-	character_menu_data.buttons[2].position = (SDL_Rect){225, 320, 150, 30};
+	character_menu_data.buttons[2].type_menu = confirm;
+	character_menu_data.buttons[2].position = (SDL_Rect){120, 275, 80, 21};
+	
 	strcpy(character_menu_data.buttons[3].label, "Back");
 	character_menu_data.buttons[3].type_menu = back;
-	character_menu_data.buttons[3].position = (SDL_Rect){10, 10, 80, 30};
+	character_menu_data.buttons[3].position = (SDL_Rect){370, 275, 80, 21};
+	character_menu_data.buttons[4].type_menu = character1;
+	character_menu_data.buttons[4].position = (SDL_Rect){120, 80, 160, 160};
+	character_menu_data.buttons[5].type_menu = character2;
+	character_menu_data.buttons[5].position = (SDL_Rect){330, 80, 160, 160};
 	
 	for(int i = 0; i < 4; i++){
 		SDL_Surface *btn_surface = TTF_RenderText_Blended(font, character_menu_data.buttons[i].label, BLACK);
@@ -462,10 +488,11 @@ void character_menu(SDL_Renderer *renderer, TTF_Font *font){
 	SDL_RenderCopy(renderer, character_menu_data.background, NULL, &character_menu_data.position);
 	
 	// Draw mode selection buttons
-	SDL_SetRenderDrawColor(renderer, 100, 100, 200, 255);
-	SDL_RenderFillRect(renderer, &character_menu_data.buttons[0].position);
-	SDL_SetRenderDrawColor(renderer, 100, 200, 100, 255);
-	SDL_RenderFillRect(renderer, &character_menu_data.buttons[1].position);
+	for(int i = 0; i < 4; i++){
+		SDL_RenderCopy(renderer,
+			character_menu_data.buttons[i].texture, NULL,
+			&character_menu_data.buttons[i].position);
+	}
 	
 	// Draw avatar selection if mode is chosen
 	if(character_mode != 0){
@@ -474,35 +501,122 @@ void character_menu(SDL_Renderer *renderer, TTF_Font *font){
 			SDL_SetRenderDrawColor(renderer, 255, 140, 0, 255);
 		else
 			SDL_SetRenderDrawColor(renderer, 200, 200, 100, 255);
-		SDL_RenderFillRect(renderer, &character_menu_data.elements[0].position);
+		SDL_RenderFillRect(renderer, &character_menu_data.buttons[4].position);
 		
 		// Avatar 2
 		if(character_avatar_choice == 2)
 			SDL_SetRenderDrawColor(renderer, 255, 140, 0, 255);
 		else
 			SDL_SetRenderDrawColor(renderer, 200, 200, 100, 255);
-		SDL_RenderFillRect(renderer, &character_menu_data.elements[1].position);
-		
-		// Confirm button
-		if(character_avatar_choice != 0)
-			SDL_SetRenderDrawColor(renderer, 150, 255, 150, 255);
-		else
-			SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
-		SDL_RenderFillRect(renderer, &character_menu_data.buttons[4].position);
-	}
-	
-	// Draw back button
-	SDL_SetRenderDrawColor(renderer, 200, 100, 100, 255);
-	SDL_RenderFillRect(renderer, &character_menu_data.buttons[5].position);
+		SDL_RenderFillRect(renderer, &character_menu_data.buttons[5].position);
+	}  
 	
 	SDL_RenderPresent(renderer);
+}  
+struct menu_t enigma_menu_data;
+int enigma_menu_init = 0;
+void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
+    SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+    if(!temp_surf){
+        printf("Error loading enigma background\n");
+        return;
+    }
+    enigma_menu_data.background = SDL_CreateTextureFromSurface(renderer,temp_surf);
+    SDL_FreeSurface(temp_surf);
+
+    enigma_menu_data.position.x = 0;
+    enigma_menu_data.position.y = 0;
+    enigma_menu_data.position.w = 600;
+    enigma_menu_data.position.h = 358;
+
+    // Boutons Quiz et Puzzle
+    strcpy(enigma_menu_data.buttons[0].label,"Quiz");
+    enigma_menu_data.buttons[0].type_menu = play; // on traitera dans handle_events
+    enigma_menu_data.buttons[0].position = (SDL_Rect){180,150,100,40};
+
+    strcpy(enigma_menu_data.buttons[1].label,"Puzzle");
+    enigma_menu_data.buttons[1].type_menu = play; // Placeholder
+    enigma_menu_data.buttons[1].position = (SDL_Rect){320,150,100,40};
+
+    // Textures des boutons
+    for(int i=0;i<2;i++){
+        SDL_Surface *surf = TTF_RenderText_Blended(font, enigma_menu_data.buttons[i].label, DARK_GREY);
+        enigma_menu_data.buttons[i].texture = SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_FreeSurface(surf);
+
+        surf = TTF_RenderText_Blended(font, enigma_menu_data.buttons[i].label, LIGHT_GREY);
+        enigma_menu_data.buttons[i].texture_hovered = SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_FreeSurface(surf);
+    }
+    enigma_menu_init = 1;
 }
-/*
-void enigma_menu(SDL_Renderer *renderer,TTF_Font *font){
-	
+
+int quiz_active = 0;
+SDL_Rect quiz_band = {50,50,500,60};
+SDL_Rect ans_buttons[3] = {{100,150,150,40},{225,150,150,40},{350,150,150,40}};
+char *quiz_question = "*****"; // Question placeholder
+char *quiz_answers[3] = {"*****","*****","*****"};
+
+void enigma_menu(SDL_Renderer *renderer, TTF_Font *font, int mouse_x, int mouse_y){
+    if(!enigma_menu_init) init_enigma_menu(renderer,font);
+
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer,enigma_menu_data.background,NULL,&enigma_menu_data.position);
+
+    SDL_Point p = {mouse_x,mouse_y};
+    for(int i=0;i<2;i++){
+        if(SDL_PointInRect(&p,&enigma_menu_data.buttons[i].position)){
+            SDL_RenderCopy(renderer,enigma_menu_data.buttons[i].texture_hovered,NULL,&enigma_menu_data.buttons[i].position);
+            Mix_PlayChannel(-1,hover_sound,0);
+        } else {
+            SDL_RenderCopy(renderer,enigma_menu_data.buttons[i].texture,NULL,&enigma_menu_data.buttons[i].position);
+        }
+    }
+
+    // Si Quiz actif
+    if(quiz_active){
+        // Bande pour question
+        SDL_SetRenderDrawColor(renderer,0,0,0,200);
+        SDL_RenderFillRect(renderer,&quiz_band);
+        SDL_Surface *q_surf = TTF_RenderText_Blended(font,quiz_question,WHITE);
+        SDL_Texture *q_tex = SDL_CreateTextureFromSurface(renderer,q_surf);
+        SDL_FreeSurface(q_surf);
+        SDL_RenderCopy(renderer,q_tex,NULL,&quiz_band);
+        SDL_DestroyTexture(q_tex);
+
+        // Boutons réponses
+        for(int i=0;i<3;i++){
+            SDL_Surface *ans_surf = TTF_RenderText_Blended(font,quiz_answers[i],DARK_GREY);
+            SDL_Texture *ans_tex = SDL_CreateTextureFromSurface(renderer,ans_surf);
+            SDL_FreeSurface(ans_surf);
+
+            SDL_RenderCopy(renderer,ans_tex,NULL,&ans_buttons[i]);
+            SDL_DestroyTexture(ans_tex);
+        }
+    }
+
+    SDL_RenderPresent(renderer);
 }
-*/
-void highlight_hovered(SDL_Renderer *renderer,
+
+void handle_enigma_events(SDL_Event *event){
+    if(event->type==SDL_KEYDOWN && event->key.keysym.sym==SDLK_ESCAPE){
+        running=0; // quitter le jeu
+    }
+    if(event->type==SDL_MOUSEBUTTONDOWN){
+        int x=event->button.x;
+        int y=event->button.y;
+        SDL_Point p={x,y};
+        // Quiz bouton
+        if(SDL_PointInRect(&p,&enigma_menu_data.buttons[0].position)){
+            quiz_active=1;
+        }
+        // Puzzle bouton
+        if(SDL_PointInRect(&p,&enigma_menu_data.buttons[1].position)){
+            quiz_active=0; // placeholder
+        }
+    }
+}
+/*void highlight_hovered(SDL_Renderer *renderer,
                        button *buttons,
                        int btn_count,
                        int mouse_x,
@@ -534,4 +648,4 @@ void highlight_hovered(SDL_Renderer *renderer,
     }
 
     SDL_RenderPresent(renderer);
-}
+}*/

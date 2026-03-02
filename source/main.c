@@ -41,6 +41,15 @@ int main(){
 					settings_menu_data.buttons,
 					4, event.motion.x, event.motion.y,game_font);
 						break;
+					case MENU_CHARACTER:
+					on_button_click_goto_menu(
+					character_menu_data.buttons,
+					6, event.motion.x, event.motion.y,game_font);
+					case MENU_ENIGMA:
+					on_button_click_goto_menu(
+					enigma_menu_data.buttons,
+					2, event.motion.x, event.motion.y,game_font);
+						break;
 					default:
 						break;
 				}
@@ -51,7 +60,7 @@ int main(){
 		switch(current_menu){
 			case MENU_MAIN:
 				main_menu(renderer, game_font);
-				highlight_hovered(renderer, mainMenu.buttons, 7, event.motion.x, event.motion.y);
+				//highlight_hovered(renderer, mainMenu.buttons, 7, event.motion.x, event.motion.y);
 				break;
 			case MENU_HIGHSCORES:
 				highscores_menu(renderer, game_font);
