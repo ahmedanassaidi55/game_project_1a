@@ -18,7 +18,7 @@ int init_game(){
         "PlaceholderName",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        600, 400,
+        600, 358,
         SDL_WINDOW_SHOWN
     	);
     	if (!window) {
@@ -240,9 +240,16 @@ void switch_menu(enum menu goto_menu,TTF_Font *font){
 		break;
 		case puzzle:
 		break;
+		case save_game:
+		printf("save\n");
+		break;
+		case load_game:
+		printf("load\n");
+		break;
 		default:
 			printf("  -> Unknown menu type\n");
 			break;
+			
 	}
 }
 
@@ -389,11 +396,72 @@ void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	SDL_RenderPresent(renderer);
 }
 
+struct menu_t save_menu_data;
+int save_menu_init = 0;
+void init_save_menu(SDL_Renderer *renderer,TTF_Font *font){
+	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+	if(!temp_surf){
+		printf("error creating surface for highscores.\n");
+		return;
+	}
+	save_menu_data.background = SDL_CreateTextureFromSurface(
+						renderer,temp_surf);
+	save_menu_data.position=(SDL_Rect){0,0,600,358};
+	SDL_FreeSurface(temp_surf);
+	strcpy(save_menu_data.buttons[0].label,"Save");
+	save_menu_data.buttons[0].position.x = 160;
+	save_menu_data.buttons[0].position.y = 120;
+	save_menu_data.buttons[0].type_menu = save_game;
+	strcpy(save_menu_data.buttons[1].label,"Load");
+	save_menu_data.buttons[1].position.x = 340;
+	save_menu_data.buttons[1].position.y = 120;
+	save_menu_data.buttons[1].type_menu = load_game;
+	strcpy(save_menu_data.buttons[2].label,"Back");
+	save_menu_data.buttons[2].position.x = 120;
+	save_menu_data.buttons[2].position.y = 250;
+	save_menu_data.buttons[2].type_menu = back;
 
-/*
+for(int i=0; i<3;i++){
+		SDL_Surface *elem_surf=TTF_RenderText_Blended(font,
+			save_menu_data.buttons[i].label, BLACK);
+		save_menu_data.buttons[i].texture=
+			SDL_CreateTextureFromSurface(renderer,elem_surf);
+		save_menu_data.buttons[i].position.w = elem_surf->w;
+		save_menu_data.buttons[i].position.h = elem_surf->h;
+		SDL_FreeSurface(elem_surf);
+		SDL_Surface *surf=TTF_RenderText_Blended(font,
+			save_menu_data.buttons[i].label, LIGHT_GREY);
+		save_menu_data.buttons[i].texture_hovered=
+			SDL_CreateTextureFromSurface(renderer,surf);
+		SDL_FreeSurface(surf);
+	}
+}
 void save_menu(SDL_Renderer *renderer,TTF_Font *font){
-		
-}*/
+	if(!save_menu_init){
+	init_save_menu(renderer,font);
+	save_menu_init = 1;
+	}
+	SDL_RenderClear(renderer);
+	
+	SDL_RenderCopy(renderer, save_menu_data.background, NULL,
+					&save_menu_data.position);
+	SDL_Point p;
+    SDL_GetMouseState(&p.x,&p.y);
+    for(int i = 0; i < 3; i++){
+   	if(SDL_PointInRect(&p,&save_menu_data.buttons[i].position)){
+        SDL_RenderCopy(renderer,
+                       save_menu_data.buttons[i].texture_hovered,
+                       NULL,
+                       &save_menu_data.buttons[i].position);
+    	}else{
+    	SDL_RenderCopy(renderer,
+                       save_menu_data.buttons[i].texture,
+                       NULL,
+                       &save_menu_data.buttons[i].position);
+                       }
+	}
+	SDL_RenderPresent(renderer);
+}
 
 struct menu_t highscores_menu_data;
 int highscores_menu_init = 0;
@@ -412,6 +480,7 @@ void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 	for(int i = 0;i<6;i++){
 	fscanf(f,"%s %d",highscores_list[i].name,&highscores_list[i].score);
 	}
+	fclose(f);
 	highscores_menu_data.background = SDL_CreateTextureFromSurface(renderer, temp_surf);
 	SDL_FreeSurface(temp_surf);
 	highscores_menu_data.position.x = 0;

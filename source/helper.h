@@ -21,7 +21,7 @@ typedef struct {
 } Score;
 enum menu {play,settings,save,highscores,character,enigma,back,exitgame,
 	mono,multi,confirm,character1,character2,
-	quiz,puzzle,correctAns,
+	quiz,puzzle,correctAns,save_game,load_game,
 	audio_inc,audio_dec,fullscreen};
 enum current_menu_state {MENU_MAIN, MENU_HIGHSCORES, MENU_CHARACTER, MENU_PLAY, MENU_SETTINGS,MENU_ENIGMA, MENU_SAVE};
 typedef struct button{
@@ -57,6 +57,8 @@ extern struct menu_t character_menu_data;
 extern int character_menu_init;
 extern struct menu_t settings_menu_data;
 extern struct menu_t enigma_menu_data;
+extern struct menu_t save_menu_data;
+extern int save_menu_init;
 extern int enigma_menu_init;
 extern int quiz_active;
 extern int settings_menu_init;

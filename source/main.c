@@ -50,6 +50,12 @@ int main(){
 					enigma_menu_data.buttons,
 					3, event.motion.x, event.motion.y,game_font);
 						break;
+					case MENU_SAVE:
+					on_button_click_goto_menu(
+					save_menu_data.buttons,
+					3, event.motion.x,
+					event.motion.y,game_font);
+					break;
 					default:
 						break;
 				}
@@ -73,6 +79,7 @@ int main(){
 				settings_menu(renderer,game_font);
 				break;
 			case MENU_SAVE:
+				save_menu(renderer,game_font);
 				break;
 			case MENU_ENIGMA:
 				enigma_menu(renderer,game_font);
