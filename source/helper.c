@@ -57,23 +57,19 @@ void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
 	mainMenu.buttons[0].type_menu=play;
 	strcpy(mainMenu.buttons[1].label,"Settings");
 	mainMenu.buttons[1].type_menu=settings;
-	strcpy(mainMenu.buttons[2].label,"Save/Load");
-	mainMenu.buttons[2].type_menu=save;
-	strcpy(mainMenu.buttons[3].label,"Highscores");
-	mainMenu.buttons[3].type_menu=highscores;
-	strcpy(mainMenu.buttons[4].label,"Character menu");
-	mainMenu.buttons[4].type_menu=character;
-	strcpy(mainMenu.buttons[5].label,"Enigma");
-	mainMenu.buttons[5].type_menu=enigma;
-	strcpy(mainMenu.buttons[6].label,"Quit");
-	mainMenu.buttons[6].type_menu=exitgame;
+	strcpy(mainMenu.buttons[2].label,"Highscores");
+	mainMenu.buttons[2].type_menu=highscores;
+	strcpy(mainMenu.buttons[3].label,"Story");
+	mainMenu.buttons[3].type_menu=story;
+	strcpy(mainMenu.buttons[4].label,"Quit");
+	mainMenu.buttons[4].type_menu=exitgame;
 	mainMenu.background =SDL_CreateTextureFromSurface(renderer,temp_surf);
 	SDL_FreeSurface(temp_surf);
 	mainMenu.position.x = 0;
 	mainMenu.position.y = 0;
 	mainMenu.position.w = 600;
 	mainMenu.position.h = 358;
-	for(int i=0; i<7;i++){
+	for(int i=0; i<5;i++){
 		SDL_Surface *button_surface=TTF_RenderText_Blended(font,
 				mainMenu.buttons[i].label,DARK_GREY);
 		mainMenu.buttons[i].texture=SDL_CreateTextureFromSurface(renderer,
@@ -144,19 +140,12 @@ void switch_menu(enum menu goto_menu,TTF_Font *font){
 	printf("switch_menu called with: %d\n", goto_menu);
 	switch(goto_menu){
 		case play:
-			printf("  -> Switching to MENU_PLAY\n");
-			current_menu = MENU_PLAY;
+			current_menu = MENU_CHARACTER;
 			break;
 		case settings:
-			printf("  -> Switching to MENU_SETTINGS\n");
 			current_menu = MENU_SETTINGS;
 			break;
-		case save:
-			printf("  -> Switching to MENU_SAVE\n");
-			current_menu = MENU_SAVE;
-			break;
 		case highscores:
-			printf("  -> Switching to MENU_HIGHSCORES\n");
 			current_menu = MENU_HIGHSCORES;
 			break;
 		case character:
@@ -233,15 +222,15 @@ void switch_menu(enum menu goto_menu,TTF_Font *font){
 			character_avatar_choice = 2;
 			break;
 		case confirm:
-			printf("chose character %d\n",character_avatar_choice);
+			current_menu = MENU_SAVE;
 			break;
 		case quiz:
 		quiz_active = 1;
 		break;
 		case puzzle:
 		break;
-		case save_game:
-		printf("save\n");
+		case new_game:
+		printf("newgame\n");
 		break;
 		case load_game:
 		printf("load\n");
@@ -408,18 +397,18 @@ void init_save_menu(SDL_Renderer *renderer,TTF_Font *font){
 						renderer,temp_surf);
 	save_menu_data.position=(SDL_Rect){0,0,600,358};
 	SDL_FreeSurface(temp_surf);
-	strcpy(save_menu_data.buttons[0].label,"Save");
-	save_menu_data.buttons[0].position.x = 160;
+	strcpy(save_menu_data.buttons[0].label,"New game");
+	save_menu_data.buttons[0].position.x = 110;
 	save_menu_data.buttons[0].position.y = 120;
-	save_menu_data.buttons[0].type_menu = save_game;
-	strcpy(save_menu_data.buttons[1].label,"Load");
-	save_menu_data.buttons[1].position.x = 340;
+	save_menu_data.buttons[0].type_menu = new_game;
+	strcpy(save_menu_data.buttons[1].label,"Load game");
+	save_menu_data.buttons[1].position.x = 320;
 	save_menu_data.buttons[1].position.y = 120;
 	save_menu_data.buttons[1].type_menu = load_game;
 	strcpy(save_menu_data.buttons[2].label,"Back");
 	save_menu_data.buttons[2].position.x = 120;
 	save_menu_data.buttons[2].position.y = 250;
-	save_menu_data.buttons[2].type_menu = back;
+	save_menu_data.buttons[2].type_menu = character;
 
 for(int i=0; i<3;i++){
 		SDL_Surface *elem_surf=TTF_RenderText_Blended(font,

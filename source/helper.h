@@ -20,8 +20,8 @@ typedef struct {
     int score;
 } Score;
 enum menu {play,settings,save,highscores,character,enigma,back,exitgame,
-	mono,multi,confirm,character1,character2,
-	quiz,puzzle,correctAns,save_game,load_game,
+	mono,multi,confirm,character1,character2,story,
+	quiz,puzzle,correctAns,load_game,new_game,
 	audio_inc,audio_dec,fullscreen};
 enum current_menu_state {MENU_MAIN, MENU_HIGHSCORES, MENU_CHARACTER, MENU_PLAY, MENU_SETTINGS,MENU_ENIGMA, MENU_SAVE};
 typedef struct button{

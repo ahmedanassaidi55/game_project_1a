@@ -60,7 +60,78 @@ int main(){
 						break;
 				}
 			}
-		}
+			if(event.type == SDL_KEYDOWN){
+				if(event.key.keysym.sym == SDLK_ESCAPE){
+				if(current_menu == MENU_MAIN)
+				running = 0;
+				}
+				if(event.key.keysym.sym == SDLK_j){
+					if(current_menu == MENU_MAIN)	
+					switch_menu(play,game_font);
+				}
+				if(event.key.keysym.sym == SDLK_o){
+					if(current_menu == MENU_MAIN)	
+					switch_menu(settings,game_font);
+				}
+				if(event.key.keysym.sym == SDLK_m){
+					if(current_menu == MENU_MAIN)	
+					switch_menu(highscores,game_font);
+				}
+				if(event.key.keysym.sym == SDLK_n){
+					if(current_menu == MENU_SAVE)	
+					switch_menu(new_game,game_font);
+				}
+				if(event.key.keysym.sym == SDLK_e){
+					if(current_menu == MENU_HIGHSCORES)	
+					switch_menu(enigma,game_font);
+				}
+				if(event.key.keysym.sym == SDLK_PLUS){
+					if(current_menu == MENU_SETTINGS)	
+					switch_menu(audio_inc,game_font);
+				}
+				if(event.key.keysym.sym == SDLK_MINUS){
+					if(current_menu == MENU_SETTINGS)	
+					switch_menu(audio_dec,game_font);
+				}
+					
+				/*switch(event.key.keysym.sym){
+				case SDLK_ESCAPE:
+					if(current_menu == MENU_SETTINGS)	
+					running = 0;
+				break;
+				case SDLK_j:
+					if(current_menu == MENU_MAIN)	
+						current_menu = MENU_PLAY;
+				break;
+				case SDLK_o:
+					if(current_menu == MENU_MAIN)	
+						current_menu = MENU_SETTINGS;
+				break;
+				case SDLK_m:
+					if(current_menu == MENU_MAIN)	
+						current_menu = MENU_HIGHSCORES;
+				break;
+				break;
+				
+				case SDLK_PLUS:
+					if(current_menu == MENU_SETTINGS)	
+					switch_menu(audio_inc,game_font);
+				break;
+				case SDLK_MINUS:
+					if(current_menu == MENU_SETTINGS)	
+					switch_menu(audio_dec,game_font);
+				break;
+				case SDLK_n:
+					if(current_menu == MENU_SAVE)	
+					switch_menu(new_game,game_font);
+				break;
+				case SDLK_e:
+					if(current_menu == MENU_HIGHSCORES)	
+					current_menu = MENU_ENIGMA;
+				break;
+				}*/
+				}
+			}
 		
 		// Render based on current menu state
 		switch(current_menu){
