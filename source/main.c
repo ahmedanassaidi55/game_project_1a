@@ -48,7 +48,7 @@ int main(){
 						break;					case MENU_ENIGMA:
 					on_button_click_goto_menu(
 					enigma_menu_data.buttons,
-					2, event.motion.x, event.motion.y,game_font);
+					3, event.motion.x, event.motion.y,game_font);
 						break;
 					default:
 						break;
@@ -60,27 +60,22 @@ int main(){
 		switch(current_menu){
 			case MENU_MAIN:
 				main_menu(renderer, game_font);
-				highlight_hovered(renderer, mainMenu.buttons, 7, event.motion.x, event.motion.y);
 				break;
 			case MENU_HIGHSCORES:
 				highscores_menu(renderer, game_font);
-				highlight_hovered(renderer, highscores_menu_data.buttons, 7, event.motion.x, event.motion.y);
 				break;
 			case MENU_CHARACTER:
 				character_menu(renderer, game_font);
-				highlight_hovered(renderer, character_menu_data.buttons, 4, event.motion.x, event.motion.y);
 				break;
 			case MENU_PLAY:
 				break;
 			case MENU_SETTINGS:
 				settings_menu(renderer,game_font);
-				highlight_hovered(renderer, settings_menu_data.buttons, 4, event.motion.x, event.motion.y);
 				break;
 			case MENU_SAVE:
 				break;
 			case MENU_ENIGMA:
 				enigma_menu(renderer,game_font);
-				highlight_hovered(renderer, enigma_menu_data.buttons, 2, event.motion.x, event.motion.y);
 				break;
 			default:
 				main_menu(renderer, game_font);

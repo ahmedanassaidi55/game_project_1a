@@ -74,6 +74,7 @@ void highlight_hovered(SDL_Renderer *renderer,button * buttons,int btn_count,int
 void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y,TTF_Font *font);
 void switch_menu(enum menu goto_menu,TTF_Font *font);
 void main_menu(SDL_Renderer *renderer,TTF_Font *font);
+void init_anim(SDL_Renderer *renderer);
 void display_anim(SDL_Renderer *renderer);
 void play_menu(SDL_Renderer *renderer,TTF_Font *font);
 void settings_menu(SDL_Renderer *renderer,TTF_Font *font);

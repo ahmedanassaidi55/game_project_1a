@@ -246,25 +246,26 @@ void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y
 	}
 }
 //animation lors de changement de menu
-
-void display_anim(SDL_Renderer *renderer){
+SDL_Texture *frames[11];
+void init_anim(SDL_Renderer *renderer){
 	char path[64];
-	for(int i = 11;i >=1;i--){
+	for(int i = 10;i >=1;i--){
 		sprintf(path,"assets/frame_%02d.jpg",i);
-		SDL_Surface *curr_frame = IMG_Load(path);
-		if(!curr_frame){
-			printf("error loading %s",path);
-			return;
-		}
-		SDL_Texture *curr_texture = SDL_CreateTextureFromSurface(renderer,curr_frame);
-		SDL_FreeSurface(curr_frame);
-		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer,curr_texture,NULL,NULL);
-		SDL_RenderPresent(renderer);
-		SDL_DestroyTexture(curr_texture);
-		SDL_Delay(100);
+		frames[i] = IMG_LoadTexture(renderer,path);
 	}
 }
+/*void display_anim(SDL_Renderer *renderer){
+	for(int i = 10;i >=1;i--){
+		SDL_Event e;
+		while(SDL_PollEvent(&e)){
+			if(e.type == SDL_QUIT) exit(0);
+		}
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, frames[i],NULL,NULL);
+		SDL_RenderPresent(renderer);
+		SDL_Delay(30);
+	}
+}*/
 /*
 void play_menu(SDL_Renderer *renderer,TTF_Font *font){
 	
@@ -547,13 +548,16 @@ void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
     // Boutons Quiz et Puzzle
     strcpy(enigma_menu_data.buttons[0].label,"Quiz");
     enigma_menu_data.buttons[0].type_menu = quiz; 
-    enigma_menu_data.buttons[0].position = (SDL_Rect){180,150,100,40};
+    enigma_menu_data.buttons[0].position = (SDL_Rect){150,200,80,30};
 
     strcpy(enigma_menu_data.buttons[1].label,"Puzzle");
     enigma_menu_data.buttons[1].type_menu = puzzle;
-    enigma_menu_data.buttons[1].position = (SDL_Rect){320,150,100,40};
+    enigma_menu_data.buttons[1].position = (SDL_Rect){370,200,80,30};
+    strcpy(enigma_menu_data.buttons[2].label,"Back");
+    enigma_menu_data.buttons[2].type_menu = back;
+    enigma_menu_data.buttons[2].position = (SDL_Rect){120,270,60,20};
 
-    for(int i=0;i<2;i++){
+    for(int i=0;i<3;i++){
         SDL_Surface *surf = TTF_RenderText_Blended(font, enigma_menu_data.buttons[i].label, DARK_GREY);
         enigma_menu_data.buttons[i].texture = SDL_CreateTextureFromSurface(renderer,surf);
         SDL_FreeSurface(surf);
@@ -566,7 +570,7 @@ void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
 }
 int quiz_active = 0;
 SDL_Rect quiz_band = {50,50,500,60};
-SDL_Rect ans_buttons[3] = {{100,150,150,40},{225,150,150,40},{350,150,150,40}};
+SDL_Rect ans_buttons[3] = {{160,150,70,30},{350,150,70,30},{290,220,70,30}};
 char *quiz_question = "*****"; // Question placeholder
 char *quiz_answers[3] = {"*****","*****","*****"};
 
@@ -593,40 +597,12 @@ void enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
             SDL_RenderCopy(renderer,ans_tex,NULL,&ans_buttons[i]);
             SDL_DestroyTexture(ans_tex);
         }
-    }
-
-    SDL_RenderPresent(renderer);
-}
-
-void highlight_hovered(SDL_Renderer *renderer,
-                       button *buttons,
-                       int btn_count,
-                       int mouse_x,
-                       int mouse_y)
-{
-    SDL_Point p = {mouse_x, mouse_y};
-
-    SDL_RenderClear(renderer);
-
-    SDL_RenderCopy(renderer,
-                   mainMenu.background,
-                   NULL,
-                   &mainMenu.position);
-
-    for(int i = 0; i < btn_count; i++)
-    {
-        if(SDL_PointInRect(&p, &buttons[i].position)){
-            SDL_RenderCopy(renderer,
-                           buttons[i].texture_hovered,
-                           NULL,
-                           &buttons[i].position);
-        }
-        else{
-            SDL_RenderCopy(renderer,
-                           buttons[i].texture,
-                           NULL,
-                           &buttons[i].position);
-        }
+    }else{
+    for(int i = 0; i < 3; i++){
+		SDL_RenderCopy(renderer,
+			enigma_menu_data.buttons[i].texture, NULL,
+			&enigma_menu_data.buttons[i].position);
+	}
     }
 
     SDL_RenderPresent(renderer);
