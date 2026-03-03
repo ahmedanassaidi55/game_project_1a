@@ -108,13 +108,21 @@ void main_menu(SDL_Renderer *renderer, TTF_Font *font){
                    &mainMenu.position);
 
     // Draw buttons
+    SDL_Point p;
+    SDL_GetMouseState(&p.x,&p.y);
     for(int i = 0; i < 7; i++){
+   	if(SDL_PointInRect(&p,&mainMenu.buttons[i].position)){
         SDL_RenderCopy(renderer,
+                       mainMenu.buttons[i].texture_hovered,
+                       NULL,
+                       &mainMenu.buttons[i].position);
+    	}else{
+    	SDL_RenderCopy(renderer,
                        mainMenu.buttons[i].texture,
                        NULL,
                        &mainMenu.buttons[i].position);
-    }
-
+                       }
+	}
     SDL_RenderPresent(renderer);
 }
 
@@ -201,11 +209,16 @@ void switch_menu(enum menu goto_menu,TTF_Font *font){
 		}
 		SDL_Surface *btn_surf=TTF_RenderText_Blended(font,
 			settings_menu_data.buttons[3].label, BLACK);
+			SDL_Surface *hvr=TTF_RenderText_Blended(font,
+			settings_menu_data.buttons[3].label, LIGHT_GREY);
 		settings_menu_data.buttons[3].texture=
 		SDL_CreateTextureFromSurface(renderer,btn_surf);
+		settings_menu_data.buttons[3].texture_hovered=
+		SDL_CreateTextureFromSurface(renderer,hvr);
 		settings_menu_data.buttons[3].position.w = btn_surf->w;
 		settings_menu_data.buttons[3].position.h = btn_surf->h;
 		SDL_FreeSurface(btn_surf);
+		SDL_FreeSurface(hvr);
 			break;
 		case mono:
 			character_mode = 1;
@@ -358,10 +371,20 @@ void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 			settings_menu_data.elements[i].texture, NULL,
 			&settings_menu_data.elements[i].position);
 	}
-	for(int i = 0; i<4;i++){
-		SDL_RenderCopy(renderer, 
-			settings_menu_data.buttons[i].texture,NULL,
-			&settings_menu_data.buttons[i].position);
+	SDL_Point p;
+    SDL_GetMouseState(&p.x,&p.y);
+    for(int i = 0; i < 4; i++){
+   	if(SDL_PointInRect(&p,&settings_menu_data.buttons[i].position)){
+        SDL_RenderCopy(renderer,
+                       settings_menu_data.buttons[i].texture_hovered,
+                       NULL,
+                       &settings_menu_data.buttons[i].position);
+    	}else{
+    	SDL_RenderCopy(renderer,
+                       settings_menu_data.buttons[i].texture,
+                       NULL,
+                       &settings_menu_data.buttons[i].position);
+                       }
 	}
 	SDL_RenderPresent(renderer);
 }
@@ -435,9 +458,19 @@ void highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 			highscores_menu_data.elements[i].texture, NULL,
 			&highscores_menu_data.elements[i].position);
 	}
-	SDL_RenderCopy(renderer, highscores_menu_data.buttons[0].texture,
-			NULL,&highscores_menu_data.buttons[0].position);
-	
+	SDL_Point p;
+    SDL_GetMouseState(&p.x,&p.y);
+   	if(SDL_PointInRect(&p,&highscores_menu_data.buttons[0].position)){
+        SDL_RenderCopy(renderer,
+                       highscores_menu_data.buttons[0].texture_hovered,
+                       NULL,
+                       &highscores_menu_data.buttons[0].position);
+    	}else{
+    	SDL_RenderCopy(renderer,
+                       highscores_menu_data.buttons[0].texture,
+                       NULL,
+                       &highscores_menu_data.buttons[0].position);
+                       }
 	SDL_RenderPresent(renderer);
 }
 
@@ -504,10 +537,20 @@ void character_menu(SDL_Renderer *renderer, TTF_Font *font){
 	SDL_RenderCopy(renderer, character_menu_data.background, NULL, &character_menu_data.position);
 	
 	// Draw mode selection buttons
-	for(int i = 0; i < 4; i++){
-		SDL_RenderCopy(renderer,
-			character_menu_data.buttons[i].texture, NULL,
-			&character_menu_data.buttons[i].position);
+	SDL_Point p;
+    SDL_GetMouseState(&p.x,&p.y);
+    for(int i = 0; i < 4; i++){
+   	if(SDL_PointInRect(&p,&character_menu_data.buttons[i].position)){
+        SDL_RenderCopy(renderer,
+                       character_menu_data.buttons[i].texture_hovered,
+                       NULL,
+                       &character_menu_data.buttons[i].position);
+    	}else{
+    	SDL_RenderCopy(renderer,
+                       character_menu_data.buttons[i].texture,
+                       NULL,
+                       &character_menu_data.buttons[i].position);
+                       }
 	}
 	
 	// Draw avatar selection if mode is chosen
@@ -578,7 +621,8 @@ void enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
     if(!enigma_menu_init) init_enigma_menu(renderer,font);
 
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer,enigma_menu_data.background,NULL,&enigma_menu_data.position);
+    SDL_Point p;
+    SDL_GetMouseState(&p.x,&p.y); SDL_RenderCopy(renderer,enigma_menu_data.background,NULL,&enigma_menu_data.position);
     if(quiz_active){
         // Bande pour question
         SDL_SetRenderDrawColor(renderer,0,0,0,200);
@@ -598,10 +642,19 @@ void enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
             SDL_DestroyTexture(ans_tex);
         }
     }else{
-    for(int i = 0; i < 3; i++){
-		SDL_RenderCopy(renderer,
-			enigma_menu_data.buttons[i].texture, NULL,
-			&enigma_menu_data.buttons[i].position);
+    
+    for(int i = 0; i < 4; i++){
+   	if(SDL_PointInRect(&p,&enigma_menu_data.buttons[i].position)){
+        SDL_RenderCopy(renderer,
+                       enigma_menu_data.buttons[i].texture_hovered,
+                       NULL,
+                       &enigma_menu_data.buttons[i].position);
+    	}else{
+    	SDL_RenderCopy(renderer,
+                       enigma_menu_data.buttons[i].texture,
+                       NULL,
+                       &enigma_menu_data.buttons[i].position);
+                       }
 	}
     }
 
