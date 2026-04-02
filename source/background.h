@@ -2,15 +2,11 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 //includes
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
+#include "decl.h"
 //const
-#define MAX_OBJ_COUNT 6  //will be changed later once map is finalized
+#define OBJ_COUNT 6  //will be changed later once map is finalized
+#define ELEM_HEIGHT 18
+#define ELEM_WIDTH 26
 #define TILE_HEIGHT 10
 #define TILE_WIDTH 15
 #define SCREEN_HEIGHT 400
@@ -26,6 +22,7 @@ typedef struct {
 typedef struct {
     SDL_Texture* base,used;
     int is_interactedwith;
+    int tilex,tiley;
     SDL_Rect position;
     }interactable;
 typedef struct {
@@ -50,7 +47,7 @@ extern int tilemap[TILE_HEIGHT][TILE_WIDTH];
 void init_background(Background *bg,SDL_Renderer *renderer);
 void load_tilemap(char *tm_file); //loading and saving will be provided with a save file if loading a save
 void save_curr_tilemap(char *tm_file);//will instead load from a default file and create new save if new game
-void display_background(Background bg,SDL_Renderer *renderer);
+void display_background(Background *bg,SDL_Renderer *renderer);
 void scroll_background(Background *bg, enum direction d, int step);
 void is_blocked(int futureX, int futureY, enum direction d);
                                             // to check if player/enemy character can move to specific location
