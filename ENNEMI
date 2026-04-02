@@ -1,0 +1,274 @@
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_PROJECTILES 50
+
+////////////////////*STRUCTURES *//////////////
+
+// Joueur
+typedef struct {
+    float x, y;
+    SDL_Rect rect;
+} Player;
+
+// Projectile intelligent
+typedef struct {
+    float x, y;
+    float vx, vy;
+    int active;
+    SDL_Rect rect;
+} Projectile;
+
+// Ennemi
+typedef struct {
+    float x, y;
+    float speed;
+    int health;
+    SDL_Texture *sprite;
+
+    SDL_Rect posScreen;
+    SDL_Rect posSprite;
+
+    int frame;
+    int direction;
+
+    Projectile projectiles[MAX_PROJECTILES];
+
+} Enemy;
+
+//////////////////////*INITIALISATION */
+
+void initEnemy(Enemy *e, SDL_Renderer *renderer)
+{
+    e->x = 400;
+    e->y = 200;
+    e->speed = 1.5;
+    e->health = 100;
+
+    SDL_Surface *surf = IMG_Load("enemy.png");
+    e->sprite = SDL_CreateTextureFromSurface(renderer, surf);
+    SDL_FreeSurface(surf);
+
+    e->posScreen.w = 64;
+    e->posScreen.h = 64;
+
+    e->posSprite.x = 0;
+    e->posSprite.y = 0;
+    e->posSprite.w = 64;
+    e->posSprite.h = 64;
+
+    for(int i=0;i<MAX_PROJECTILES;i++)
+        e->projectiles[i].active = 0;
+}
+
+////////////////////////////* ANIMATION */
+
+void animateEnemy(Enemy *e)
+{
+    e->frame++;
+    if(e->frame >= 4) e->frame = 0;
+
+    e->posSprite.x = e->frame * e->posSprite.w;
+}
+
+////////////////////* IA SIMPLE (SUIVI JOUEUR) */
+
+void moveEnemyTowardsPlayer(Enemy *e, Player p)
+{
+    float dx = p.x - e->x;
+    float dy = p.y - e->y;
+
+    float dist = sqrt(dx*dx + dy*dy);
+
+    if(dist > 0)
+    {
+        e->x += (dx/dist) * e->speed;
+        e->y += (dy/dist) * e->speed;
+    }
+
+    e->posScreen.x = (int)e->x;
+    e->posScreen.y = (int)e->y;
+}
+
+/////////////////////* TIR INTELLIGENT */
+
+void shootProjectile(Enemy *e, Player p)
+{
+    for(int i=0;i<MAX_PROJECTILES;i++)
+    {
+        if(!e->projectiles[i].active)
+        {
+            Projectile *proj = &e->projectiles[i];
+
+            proj->x = e->x;
+            proj->y = e->y;
+
+            float dx = p.x - e->x;
+            float dy = p.y - e->y;
+            float dist = sqrt(dx*dx + dy*dy);
+
+            proj->vx = (dx/dist) * 3.0;
+            proj->vy = (dy/dist) * 3.0;
+
+            proj->active = 1;
+            proj->rect.w = 10;
+            proj->rect.h = 10;
+
+            break;
+        }
+    }
+}
+
+///////////////////////////* UPDATE PROJECTILES */
+
+void updateProjectiles(Enemy *e)
+{
+    for(int i=0;i<MAX_PROJECTILES;i++)
+    {
+        if(e->projectiles[i].active)
+        {
+            e->projectiles[i].x += e->projectiles[i].vx;
+            e->projectiles[i].y += e->projectiles[i].vy;
+
+            e->projectiles[i].rect.x = (int)e->projectiles[i].x;
+            e->projectiles[i].rect.y = (int)e->projectiles[i].y;
+
+            // Désactiver si sort écran
+            if(e->projectiles[i].x < 0 || e->projectiles[i].x > 800 ||
+               e->projectiles[i].y < 0 || e->projectiles[i].y > 600)
+            {
+                e->projectiles[i].active = 0;
+            }
+        }
+    }
+}
+
+//////////////////* COLLISION */
+
+int checkCollision(SDL_Rect a, SDL_Rect b)
+{
+    if (a.x + a.w < b.x) return 0;
+    if (a.x > b.x + b.w) return 0;
+    if (a.y + a.h < b.y) return 0;
+    if (a.y > b.y + b.h) return 0;
+    return 1;
+}
+
+///////////////////* PATHFINDING (SIMPLIFIÉ TYPE A*) */
+/*
+⚠️ Version simplifiée (logique A*)
+Idée:
+- Aller vers le joueur
+- Éviter obstacles (à ajouter plus tard)
+*/
+
+void pathfindingSimple(Enemy *e, Player p)
+{
+    // direction X
+    if(p.x > e->x) e->x += e->speed;
+    else e->x -= e->speed;
+
+    // direction Y
+    if(p.y > e->y) e->y += e->speed;
+    else e->y -= e->speed;
+
+    e->posScreen.x = e->x;
+    e->posScreen.y = e->y;
+}
+
+///////////////////////* AFFICHAGE */
+
+void renderEnemy(Enemy *e, SDL_Renderer *renderer)
+{
+    SDL_RenderCopy(renderer, e->sprite, &e->posSprite, &e->posScreen);
+
+    // Dessiner projectiles
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+    for(int i=0;i<MAX_PROJECTILES;i++)
+    {
+        if(e->projectiles[i].active)
+        {
+            SDL_RenderFillRect(renderer, &e->projectiles[i].rect);
+        }
+    }
+}
+
+//////////////////////* GAME LOOP TEST */
+
+int main()
+{
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Window *window = SDL_CreateWindow("Enemy AI",
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        800, 600, 0);
+
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+    IMG_Init(IMG_INIT_PNG);
+
+    Enemy enemy;
+    Player player;
+
+    player.x = 100;
+    player.y = 100;
+    player.rect.w = 50;
+    player.rect.h = 50;
+
+    initEnemy(&enemy, renderer);
+
+    int running = 1;
+    SDL_Event e;
+
+    Uint32 lastShoot = 0;
+
+    while(running)
+    {
+        while(SDL_PollEvent(&e))
+        {
+            if(e.type == SDL_QUIT)
+                running = 0;
+        }
+
+        // Mouvement joueur (test souris)
+        int mx, my;
+        SDL_GetMouseState(&mx, &my);
+        player.x = mx;
+        player.y = my;
+
+        player.rect.x = player.x;
+        player.rect.y = player.y;
+
+        // IA
+        pathfindingSimple(&enemy, player);
+
+        animateEnemy(&enemy);
+
+        // Tir toutes les 1s
+        if(SDL_GetTicks() - lastShoot > 1000)
+        {
+            shootProjectile(&enemy, player);
+            lastShoot = SDL_GetTicks();
+        }
+
+        updateProjectiles(&enemy);
+
+        // RENDER
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        renderEnemy(&enemy, renderer);
+
+        // joueur
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        SDL_RenderFillRect(renderer, &player.rect);
+
+        SDL_RenderPresent(renderer);
+        SDL_Delay(16);
+    }
+
+    SDL_Quit();
+    return 0;
+}
