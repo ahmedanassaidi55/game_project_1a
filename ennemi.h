@@ -5,33 +5,33 @@
 #include <SDL_image.h>
 
 #define MAX_PROJECTILES 20
-/* Nombre maximum de projectiles que l’ennemi peut gérer en même temps */
+
 
 /*================ STRUCTURES =================*/
 
-/* Structure représentant un projectile (balle de l’ennemi) */
+/* Structure representant un projectile (balle de l’ennemi) */
 typedef struct {
     float x, y;       // position du projectile
-    float vx, vy;     // vitesse (direction + déplacement)
-    int active;       // 1 = actif, 0 = inactif (non utilisé)
-    SDL_Rect rect;    // rectangle pour affichage et collision
+    float vx, vy;     // vitesse 
+    int active;       //
+    SDL_Rect rect;    // rectangle pour affichage
 } Projectile;
 
 /* Structure représentant le joueur */
 typedef struct {
-    float x, y;      // position du joueur dans le monde
+    float x, y;      // position du joueur dans le game
 } Player;
 
 /* Structure représentant l’ennemi */
 typedef struct {
-    float x, y;          // position de l’ennemi
-    float speed;         // vitesse de déplacement
-    int health;          // points de vie de l’ennemi
+    float x, y;          // position 
+    float speed;         // vitesse
+    int health;          //  vie 
 
-    SDL_Texture *sprite; // image (texture SDL) de l’ennemi
+    SDL_Texture *sprite; // image 
 
-    SDL_Rect posScreen;  // position affichée à l’écran
-    SDL_Rect posSprite;  // découpage du sprite pour animation
+    SDL_Rect posScreen;  // position affichee
+    SDL_Rect posSprite;  // decoupage du sprite pour animation
 
     int frame;           // frame actuelle de l’animation
 
@@ -56,14 +56,8 @@ void pathfindingSimple(Enemy *e, Player p);
    Change les frames du sprite pour créer une animation */
 void animateEnemy(Enemy *e);
 
-/* Tir :
-   Crée un projectile dirigé vers le joueur */
 void shootProjectile(Enemy *e, Player p);
 
-/* Mise à jour des projectiles :
-   - déplacement
-   - désactivation si hors écran */
-void updateProjectiles(Enemy *e);
 
 /* Détection de collision entre deux rectangles SDL */
 int checkCollision(SDL_Rect a, SDL_Rect b);
