@@ -43,7 +43,7 @@ void init_background(Background *bg,SDL_Renderer *renderer){
 	}
 	clk.start = SDL_GetTicks()/1000;
 }
-int tilemap[TILE_HEIGHT][TILE_WIDTH] =0;
+int tilemap[TILE_HEIGHT][TILE_WIDTH];
 void load_tilemap(char *tm_file){
 	FILE *f = fopen(tm_file,"r");
 	if(f == NULL){
@@ -51,8 +51,8 @@ void load_tilemap(char *tm_file){
 		return;
 	}
 	for(int i =0; i< TILE_HEIGHT;i++){
-		for(int j=0; k<TILE_WIDTH;j++){
-			if(fscanf(f,"%d",&tilemap[i][j]!=1))
+		for(int j=0; j<TILE_WIDTH;j++){
+			if(fscanf(f,"%d",&tilemap[i][j])!=1)
 			break;	
 		}
 	}
@@ -65,10 +65,10 @@ void save_curr_tilemap(char *tm_file){
 		return;
 	}
 	for(int i =0; i< TILE_HEIGHT;i++){
-		for(int j=0; k<TILE_WIDTH;j++){
-			fprintf(f,"%d ",tilemap[i][j])
+		for(int j=0; j<TILE_WIDTH;j++){
+			fprintf(f,"%d ",tilemap[i][j]);
 		}
-		fprintf(fp,"\n");
+		fprintf(f,"\n");
 	}
 	fclose(f);
 }
@@ -82,9 +82,9 @@ void display_background(Background* bg,SDL_Renderer *renderer){
 		continue;
 	}
 	if(bg->objects[i].is_interactedwith){
-		SDL_RenderCopy(renderer, bg->objects[i].used,NULL,&(SDL_Rect){ScreenX,ScreenY,bg->objects[i].position.w,bg->objects[i].position.h});
+		SDL_RenderCopy(renderer, bg->objects[i].used,NULL,&(SDL_Rect){screenX,screenY,bg->objects[i].position.w,bg->objects[i].position.h});
 	}else{
-	SDL_RenderCopy(renderer, bg->objects[i].base,NULL,&(SDL_Rect){ScreenX,ScreenY,bg->objects[i].position.w,bg->objects[i].position.h});}
+	SDL_RenderCopy(renderer, bg->objects[i].base,NULL,&(SDL_Rect){screenX,screenY,bg->objects[i].position.w,bg->objects[i].position.h});}
 	}
 }
 void scroll_background(Background *bg, enum direction d, int step){
@@ -124,8 +124,7 @@ int is_blocked(int futureX, int futureY){
 	return tilemap[(int)futureX/TILE_WIDTH][(int)futureY/TILE_HEIGHT] == 1;
 }
 void interact(int x,int y,interactable * objects){
-
-for( interactable it = objects; it<objects+OBJ_COUNT;it++){
+for( interactable* it = objects; it<objects+OBJ_COUNT;it++){
 	if(!it->is_interactedwith){
 		int dist = sqrt(pow(x - it->position.x, 2) + pow(y - it->position.y, 2));
 		if(dist<INTERACT_RAD){
@@ -161,7 +160,7 @@ void manage_time(game_clock *t,SDL_Renderer *renderer,TTF_Font *font){
 }
 //clear renderer and render the frame only once per frame and not on every pass
 void display_tutorial(SDL_Renderer *renderer,tutorial_piece tut){
-	SDL_RenderCopy(renderer,tut.tut_display,NULL,tut.position);
+	SDL_RenderCopy(renderer,tut.tut_display,NULL,&tut.position);
 }
 void save_score(ScoreInfo s,char* time, char* score_file){
 	FILE *f = fopen(score_file,"a");

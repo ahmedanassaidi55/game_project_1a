@@ -5,8 +5,8 @@
 #include "decl.h"
 //const
 #define OBJ_COUNT 6  //will be changed later once map is finalized
-#define BACKGROUND HEIGHT 3200
-#define BACKGROUND WIDTH 2000
+#define BACKGROUND_HEIGHT 3200
+#define BACKGROUND_WIDTH 2000
 #define INTERACT_RAD 25
 #define ELEM_HEIGHT 18
 #define ELEM_WIDTH 26
@@ -17,17 +17,18 @@
 #define WHITE (SDL_Color){255,255,255,255}
 //types
 typedef struct {
-    SDL_Texture* texture;
-    int offsetX,offsetY;
-    SDL_Rect position;
-    interactable objects[MAX_OBJ_COUNT];
-} Background;
-typedef struct {
-    SDL_Texture* base,used;
+    SDL_Texture* base,*used;
     int is_interactedwith;
     int tilex,tiley;
     SDL_Rect position;
     }interactable;
+typedef struct {
+    SDL_Texture* texture;
+    int offsetX,offsetY;
+    SDL_Rect position;
+    interactable objects[OBJ_COUNT];
+} Background;
+
 typedef struct {
     int start;
     int elapsed;
@@ -42,7 +43,7 @@ typedef struct {
     SDL_Texture *tut_display;
     SDL_Rect position;
 }tutorial_piece;
-enum direction{up,up_right,right,down_right,down,down_left,left,up_left};
+enum direction{up,up_right,right,down_right,down,down_left,left,left_up};
 
 //globals
 extern Background bg;
