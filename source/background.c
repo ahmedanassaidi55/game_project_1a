@@ -26,52 +26,19 @@ void init_background(Background *bg,SDL_Renderer *renderer){
 		bg->objects[i].base = IMG_LoadTexture(renderer,elem_path);
 		sprintf(elem_path,"assets/images/elemu%d.png",i);
 		bg->objects[i].used = IMG_LoadTexture(renderer,elem_path);
-		if(fscanf(f,"%d|%d|%d|%d|%d|%d",&bg->objects[i].position.x,
+		if(fscanf(f,"%d|%d|%d|%d|%d",&bg->objects[i].position.x,
 		&bg->objects[i].position.y,
 		&bg->objects[i].position.w,
 		&bg->objects[i].position.h,
-		&bg->objects[i].tilex,
-		&bg->objects[i].tiley
-		)!=1){
+		bg->objects[i].is_interactedwith
+		)!=5){
 			printf("failed to initialize object: %d .\n",i);
 			break; 
-		}
-		
-		bg->objects[i].is_interactedwith = tilemap[bg->objects[i].tilex][bg->objects[i].tiley] == 0;
-		
-		
+		}		
 	}
 	clk.start = SDL_GetTicks()/1000;
 }
-int tilemap[TILE_HEIGHT][TILE_WIDTH];
-void load_tilemap(char *tm_file){
-	FILE *f = fopen(tm_file,"r");
-	if(f == NULL){
-		printf("invalid path.\n");
-		return;
-	}
-	for(int i =0; i< TILE_HEIGHT;i++){
-		for(int j=0; j<TILE_WIDTH;j++){
-			if(fscanf(f,"%d",&tilemap[i][j])!=1)
-			break;	
-		}
-	}
-	fclose(f);
-}
-void save_curr_tilemap(char *tm_file){
-	FILE *f = fopen(tm_file,"w");
-	if(f == NULL){
-		printf("couldn't open save file");
-		return;
-	}
-	for(int i =0; i< TILE_HEIGHT;i++){
-		for(int j=0; j<TILE_WIDTH;j++){
-			fprintf(f,"%d ",tilemap[i][j]);
-		}
-		fprintf(f,"\n");
-	}
-	fclose(f);
-}
+
 void display_background(Background* bg,SDL_Renderer *renderer){
 	SDL_RenderCopy(renderer,bg->texture,&(SDL_Rect){bg->offsetX,bg->offsetY,SCREEN_WIDTH,SCREEN_HEIGHT},NULL);
 	for(int i = 0; i < OBJ_COUNT; i++){
@@ -88,7 +55,7 @@ void display_background(Background* bg,SDL_Renderer *renderer){
 	}
 }
 void scroll_background(Background *bg, enum direction d, int step){
-	int diag_mvt = 0.7071; // to keep constant speed in diagonal directions
+	int diag_mvt = 0.7071f; // to keep constant speed in diagonal directions
 	switch(d){
 	case up:
 	bg->offsetY = bg->offsetY-step<0?0:bg->offsetY-step;
@@ -102,7 +69,8 @@ void scroll_background(Background *bg, enum direction d, int step){
 	break;
 	case down_right:
 	bg->offsetY = bg->offsetY+step*diag_mvt>(BACKGROUND_HEIGHT-SCREEN_HEIGHT)?BACKGROUND_HEIGHT-SCREEN_HEIGHT:bg->offsetY+ step*diag_mvt;
-	bg->offsetX = bg->offsetX+step*diag_mvt<(BACKGROUND_WIDTH-SCREEN_WIDTH)?BACKGROUND_WIDTH-SCREEN_WIDTH:bg->offsetX+step*diag_mvt;
+	bg->offsetX = bg->offsetX + step*diag_mvt > (BACKGROUND_WIDTH -SCREEN_WIDTH)
+	? (BACKGROUND_WIDTH - SCREEN_WIDTH) : bg->offsetX + step*diag_mvt;
 	break;
 	case down:
 	bg->offsetY = bg->offsetY+step>(BACKGROUND_HEIGHT-SCREEN_HEIGHT)?BACKGROUND_HEIGHT-SCREEN_HEIGHT:bg->offsetY+step;
@@ -159,6 +127,22 @@ void manage_time(game_clock *t,SDL_Renderer *renderer,TTF_Font *font){
 	}
 }
 //clear renderer and render the frame only once per frame and not on every pass
+void init_tutorial(SDL_Renderer *renderer,tutorial_piece *tutorialArr, int tut_count){
+	char path[30];
+	for (tutorial_piece *pT = tutorialArr;pT<tutorialArr+tut_count;pT++)
+	{
+		sprintf(path,"assets/images/tutorial%d.png",pT-tutorialArr);
+		SDL_Surface *s = SDL_IMGLoad(path);
+		if(!s){
+			printf("error creating surface @init_tutorial\n");
+			return;
+		}	
+		
+		pT->position = (SDL_Rect){50,30,s->w,s->h};
+		pT->tut_display = SDL_CreateTextureFromSurface(renderer,s);
+		SDL_FreeSurface(s);
+	}
+}
 void display_tutorial(SDL_Renderer *renderer,tutorial_piece tut){
 	SDL_RenderCopy(renderer,tut.tut_display,NULL,&tut.position);
 }
@@ -177,7 +161,45 @@ void save_score(ScoreInfo s,char* time, char* score_file){
 		return;
 	}
 }
-//already implemented in helper.c, visit helper.c @455 to 533 for detailed implementation, we were already evaluated for this menu so idt you guys care much
-void display_highscores(char * score_file,SDL_Renderer *renderer){
-	
+void input_name(SDL_Renderer *renderer,SDL_Event *e,char name_buff[],int len,TTF_Font *font){
+	display_name(renderer,font, name_buff)
+	if(e->type == SDL_TEXTINPUT){
+		snprintf(name_buff +strlen(name_buff),
+			len-strlen(name_buff),
+			"%s",e->text.text);
+	}//limiting input length to string size coz abdullah ben abdelaziz karawita might break the name thing
+	else if(e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_BACKSPACE && strlen(name_buff) >0)		
+		{
+			name_buff[strlen(name_buff)-1]='\0';
+		}
+	else if(e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_RETURN){
+		ScoreInfo s;
+		strcpy(s.name,name_buff);
+		s.score = clk.elapsed; //will determine score calculation
+		save_score(s,clk.disp_clock,"saves/highscores.txt");
+		SDL_StopTextInput();
+		strcpy(name_buff,"");
+		current_menu = MENU_HIGHSCORES;
+	}		
+}
+void display_name(SDL_Renderer *renderer, TTF_Font *font, char *name) {
+    SDL_Color color = {255, 255, 255, 255};
+    char display_text[20];
+    snprintf(display_text, sizeof(display_text), "Name: %s", name);
+
+    SDL_Surface *surface = TTF_RenderText_Blended(font, display_text, color);
+    if (!surface) {
+        printf("Error creating text surface @display_name\n");
+        return;
+    }
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Rect dest = {(SCREEN_WIDTH-surface->w)/2, 50, surface->w, surface->h};
+    SDL_FreeSurface(surface);
+
+    if (!texture) {
+        printf("Error creating text texture @display_name\n");
+        return;
+    }
+    SDL_RenderCopy(renderer, texture, NULL, &dest);
+    SDL_DestroyTexture(texture);
 }

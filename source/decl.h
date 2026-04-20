@@ -50,4 +50,5 @@ extern SDL_Renderer *renderer;
 extern Mix_Chunk *music;
 extern int volume,paused;
 extern int running;
+extern enum current_menu_state current_menu;
 #endif

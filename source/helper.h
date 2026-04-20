@@ -16,7 +16,6 @@ extern int quiz_active;
 extern int settings_menu_init;
 extern int character_mode;
 extern int character_avatar_choice;
-extern enum current_menu_state current_menu;
 //definition des fonctions 'helper'
 int init_game();
 void exit_game();
