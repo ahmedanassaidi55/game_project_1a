@@ -467,7 +467,7 @@ void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 		printf("couldn't find highscores\n");
 	}
 	for(int i = 0;i<6;i++){
-	fscanf(f,"%s %d",highscores_list[i].name,&highscores_list[i].score);
+	fscanf(f,"%d|%s|%s",&highscores_list[i].score,highscores_list[i].name,highscores_list[i].time);
 	}
 	fclose(f);
 	highscores_menu_data.background = SDL_CreateTextureFromSurface(renderer, temp_surf);
@@ -479,13 +479,13 @@ void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 	
 	char buffer[100];
 	for (int i = 0; i < 6; i++) {
-		sprintf(buffer, "%d. %s : %d", i+1, highscores_list[i].name, highscores_list[i].score);
+		sprintf(buffer, "%s : %d time:%s", i+1, highscores_list[i].name, highscores_list[i].score,highscores_list[i].time);
 		SDL_Surface* surface = TTF_RenderText_Blended(font, buffer, (SDL_Color){255,255,255,255});
 		highscores_menu_data.elements[i].texture = SDL_CreateTextureFromSurface(renderer, surface);
 		highscores_menu_data.elements[i].position.x = 120 + ((i % 2) * 200);
 		highscores_menu_data.elements[i].position.y = 120 + ((i / 2) * 50);
 		highscores_menu_data.elements[i].position.w = 160;
-		highscores_menu_data.elements[i].position.h = 21;
+		highscores_menu_data.elements[i].position.h = 20;
 		SDL_FreeSurface(surface);
 	}
 	strcpy(highscores_menu_data.buttons[0].label,"Back");

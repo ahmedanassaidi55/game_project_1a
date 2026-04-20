@@ -17,9 +17,10 @@
 #define WHITE (SDL_Color){255,255,255,255}
 //definition des types
 typedef struct {
-    char name[50];
+    char name[20],time[10];
     int score;
 } Score;
+enum gamestate {level1,level2,tutorial,name_input};
 enum menu {play,settings,save,highscores,character,enigma,back,exitgame,
 	mono,multi,confirm,character1,character2,story,
 	quiz,puzzle,correctAns,load_game,new_game,
@@ -50,5 +51,6 @@ extern SDL_Renderer *renderer;
 extern Mix_Chunk *music;
 extern int volume,paused;
 extern int running;
+extern int character_mode;
 extern enum current_menu_state current_menu;
 #endif

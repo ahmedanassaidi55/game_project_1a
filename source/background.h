@@ -8,10 +8,6 @@
 #define BACKGROUND_HEIGHT 3200
 #define BACKGROUND_WIDTH 2000
 #define INTERACT_RAD 25
-#define ELEM_HEIGHT 18
-#define ELEM_WIDTH 26
-#define TILE_HEIGHT 10
-#define TILE_WIDTH 15
 #define SCREEN_HEIGHT 400
 #define SCREEN_WIDTH 600
 #define WHITE (SDL_Color){255,255,255,255}
@@ -23,6 +19,7 @@ typedef struct {
     }interactable;
 typedef struct {
     SDL_Texture* texture;
+    SDL_Surface* bg_collision_map;
     int offsetX,offsetY;
     SDL_Rect position;
     interactable objects[OBJ_COUNT];
@@ -45,21 +42,21 @@ typedef struct {
 enum direction{up,up_right,right,down_right,down,down_left,left,left_up};
 
 //globals
-extern Background bg;
+extern Background *bg;
 extern tutorial_piece tutorial[3];
 extern game_clock clk;
+extern background_init;
 //functions
-void init_background(Background *bg,SDL_Renderer *renderer);
+Background* init_background(SDL_Renderer *renderer,int player_count);
 void display_background(Background *bg,SDL_Renderer *renderer);
 void scroll_background(Background *bg, enum direction d, int step);
-int is_blocked(int futureX, int futureY);
+int is_blocked(SDL_Surface* collision_map,int x, int y);
+SDL_Color get_pixel(SDL_Surface *surface, int x, int y);
 void init_tutorial(SDL_Renderer *renderer,tutorial_piece *tutorialArr, int tut_count);
-void input_name(SDL_Renderer *renderer,SDL_Event *e,char name_buff[],int len,TTF_Font *font);
-                                            // to check if player/enemy character can move to specific location
-                                            // should be called with currentX+velX, currentY+velY
-                                            // if it returns true, the specified location cannot be traveled to
+void input_name(SDL_Renderer *renderer,SDL_Event *e,char name_buff[],int len,TTF_Font *font);                     
 void manage_time(game_clock *t,SDL_Renderer *renderer,TTF_Font *font);
 void display_tutorial(SDL_Renderer *renderer,tutorial_piece tut);
 void save_score(ScoreInfo s,char* time, char* score_file);
 void display_name(SDL_Renderer *renderer, TTF_Font *font, char *name);
+void clean_up_bg(Background *bg,tutorial_piece *tut,game_clock *clk);
 #endif

@@ -14,7 +14,6 @@ extern int save_menu_init;
 extern int enigma_menu_init;
 extern int quiz_active;
 extern int settings_menu_init;
-extern int character_mode;
 extern int character_avatar_choice;
 //definition des fonctions 'helper'
 int init_game();
