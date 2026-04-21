@@ -1,4 +1,4 @@
-#include "puzzle.h"
+#include "Puzzle.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

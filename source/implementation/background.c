@@ -10,13 +10,13 @@ Background* init_background(SDL_Renderer *renderer,int player_count){
 		printf("error allocating @init_background\n");
 		return NULL;
 	}
-		SDL_Surface *s = IMG_Load("../assets/images/mapbg.png");
+		SDL_Surface *s = IMG_Load("assets/images/mapbg.png");
 		if(!s){
 			printf("invalid path.\n");
 			free(bg);
 			return NULL;
 		}
-		SDL_Surface *surface_coll = IMG_Load("../assets/images/collmapbg.png");
+		SDL_Surface *surface_coll = IMG_Load("assets/images/collmapbg.png");
 		if(!surface_coll){
 			printf("invalid path.\n");
 			free(bg);
@@ -31,7 +31,7 @@ Background* init_background(SDL_Renderer *renderer,int player_count){
 			free(bg);
 			return NULL;
 		}
-	FILE *f = fopen("../saves/elem_pos.txt","r");
+	FILE *f = fopen("saves/elem_pos.txt","r");
 	if (f == NULL){
 			printf("couldn't find file");
 			free(bg);
@@ -46,9 +46,9 @@ Background* init_background(SDL_Renderer *renderer,int player_count){
 		
 		for(int i = 0; i < OBJ_COUNT; i++){
 			char elem_path[30];
-			sprintf(elem_path,"../assets/images/elem%d.png",i);
+			sprintf(elem_path,"assets/images/elem%d.png",i);
 			pB->objects[i].base = IMG_LoadTexture(renderer,elem_path);
-			sprintf(elem_path,"../assets/images/elemu%d.png",i);
+			sprintf(elem_path,"assets/images/elemu%d.png",i);
 			pB->objects[i].used = IMG_LoadTexture(renderer,elem_path);
 			if(!pB->objects[i].base || !pB->objects[i].used){
     				printf("texture load failed @init_bg\n");
@@ -238,7 +238,7 @@ void init_tutorial(SDL_Renderer *renderer,tutorial_piece *tutorialArr, int tut_c
 	char path[50];
 	for (tutorial_piece *pT = tutorialArr;pT<tutorialArr+tut_count;pT++)
 	{
-		sprintf(path,"../assets/images/tutorial%d.png",(int)(pT-tutorialArr));
+		sprintf(path,"assets/images/tutorial%d.png",(int)(pT-tutorialArr));
 		SDL_Surface *s = IMG_Load(path);
 		if(!s){
 			printf("error creating surface @init_tutorial\n");

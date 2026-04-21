@@ -6,7 +6,7 @@ Mix_Chunk *hover_sound = NULL;
 
 void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
     // Charger le 4ème arrière-plan
-    SDL_Surface *temp_surf = IMG_Load("assets/frame_04.jpg");
+    SDL_Surface *temp_surf = IMG_Load("assets/images/frame_04.jpg");
     if(!temp_surf){
         printf("Error loading enigma background\n");
         return;
@@ -40,8 +40,8 @@ void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
     }
 
     // Charger sons
-    hover_sound = Mix_LoadWAV("assets/hover.wav");
-    quiz_music = Mix_LoadWAV("assets/quiz_suspense.wav");
+    hover_sound = Mix_LoadWAV("assets/audio/hover.wav");
+    quiz_music = Mix_LoadWAV("assets/audio/quiz_suspense.wav");
 
     enigma_menu_init = 1;
 }

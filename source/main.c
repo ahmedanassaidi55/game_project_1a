@@ -6,13 +6,13 @@ int main(){
 	if(init_game()){
 		return 1;
 	};
-	game_font = TTF_OpenFont("assets/dogicapixel.ttf",24);
+	game_font = TTF_OpenFont("assets/fonts/dogicapixel.ttf",24);
 	if(!game_font){
 		printf("font access error\n");
 		exit_game();
 		return 1;
 	}
-	music = Mix_LoadWAV("assets/placeholdermusic.wav");
+	music = Mix_LoadWAV("assets/audio/placeholdermusic.wav");
 	if(!music){
 		printf("audio access error\n");
 		Mix_FreeChunk(music);

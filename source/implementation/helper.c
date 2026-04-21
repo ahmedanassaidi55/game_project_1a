@@ -48,7 +48,7 @@ int init_game(){
 	return 0;
 }
 void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
-	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+	SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface.\n");
 		return;
@@ -257,7 +257,7 @@ void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y
 struct menu_t settings_menu_data;
 int settings_menu_init = 0;
 void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
-	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+	SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface for highscores.\n");
 		return;
@@ -363,7 +363,7 @@ void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 struct menu_t save_menu_data;
 int save_menu_init = 0;
 void init_save_menu(SDL_Renderer *renderer,TTF_Font *font){
-	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+	SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface for highscores.\n");
 		return;
@@ -432,7 +432,7 @@ int highscores_menu_init = 0;
 Score highscores_list[6];
 //va etre remplacer par une propre fonction a trouver les scores
 void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
-	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+	SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface for highscores.\n");
 		return;
@@ -513,7 +513,7 @@ int character_mode = 0;           // 0 = none | 1 = mono | 2 = multi
 int character_avatar_choice = 0;  // 0 = none | 1 = avatar1 | 2 = avatar2
 
 void init_character_menu(SDL_Renderer *renderer, TTF_Font *font){
-	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+	SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface for character menu.\n");
 		return;
@@ -608,7 +608,7 @@ void character_menu(SDL_Renderer *renderer, TTF_Font *font){
 struct menu_t enigma_menu_data;
 int enigma_menu_init = 0;
 void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
-    SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
+    SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
     if(!temp_surf){
         printf("Error loading enigma background\n");
         return;
