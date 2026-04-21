@@ -1,0 +1,26 @@
+5
+Quelle est la capitale de la France ?
+Paris
+Lyon
+Marseille
+1
+Combien font 7 x 6 ?
+41
+42
+43
+2
+En SDL2, quelle init pour le texte ?
+SDL_Init
+TTF_Init
+IMG_Init
+2
+Quel mot-cle commence souvent une fonction en C ?
+return
+void
+include
+2
+Combien de bits dans un octet ?
+4
+8
+16
+2
