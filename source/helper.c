@@ -479,7 +479,7 @@ void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 	
 	char buffer[100];
 	for (int i = 0; i < 6; i++) {
-		sprintf(buffer, "%s : %d time:%s", i+1, highscores_list[i].name, highscores_list[i].score,highscores_list[i].time);
+		sprintf(buffer, "%s : %d time:%s", highscores_list[i].name, highscores_list[i].score,highscores_list[i].time);
 		SDL_Surface* surface = TTF_RenderText_Blended(font, buffer, (SDL_Color){255,255,255,255});
 		highscores_menu_data.elements[i].texture = SDL_CreateTextureFromSurface(renderer, surface);
 		highscores_menu_data.elements[i].position.x = 120 + ((i % 2) * 200);

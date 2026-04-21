@@ -10,13 +10,13 @@ Background* init_background(SDL_Renderer *renderer,int player_count){
 		printf("error allocating @init_background\n");
 		return NULL;
 	}
-		SDL_Surface *s = IMG_Load("assets/images/mapbg.png");
+		SDL_Surface *s = IMG_Load("../assets/images/mapbg.png");
 		if(!s){
 			printf("invalid path.\n");
 			free(bg);
 			return NULL;
 		}
-		SDL_Surface *surface_coll = IMG_Load("assets/images/collmapbg.png");
+		SDL_Surface *surface_coll = IMG_Load("../assets/images/collmapbg.png");
 		if(!surface_coll){
 			printf("invalid path.\n");
 			free(bg);
@@ -31,7 +31,7 @@ Background* init_background(SDL_Renderer *renderer,int player_count){
 			free(bg);
 			return NULL;
 		}
-	FILE *f = fopen("saves/elem_pos.txt","r");
+	FILE *f = fopen("../saves/elem_pos.txt","r");
 	if (f == NULL){
 			printf("couldn't find file");
 			free(bg);
@@ -46,9 +46,9 @@ Background* init_background(SDL_Renderer *renderer,int player_count){
 		
 		for(int i = 0; i < OBJ_COUNT; i++){
 			char elem_path[30];
-			sprintf(elem_path,"assets/images/elem%d.png",i);
+			sprintf(elem_path,"../assets/images/elem%d.png",i);
 			pB->objects[i].base = IMG_LoadTexture(renderer,elem_path);
-			sprintf(elem_path,"assets/images/elemu%d.png",i);
+			sprintf(elem_path,"../assets/images/elemu%d.png",i);
 			pB->objects[i].used = IMG_LoadTexture(renderer,elem_path);
 			if(!pB->objects[i].base || !pB->objects[i].used){
     				printf("texture load failed @init_bg\n");
@@ -120,9 +120,9 @@ void display_background(Background* bg,SDL_Renderer *renderer,int player_count){
 	}
 }
 void scroll_background(Background *bg, enum direction d, int step){
-	float diag_mvt = 0.7071f;
+	float diag_mvt = 0.7071f;// to keep constant speed in diagonal directions
 	int x = bg->offsetX;
-	int y = bg->offsetY; // to keep constant speed in diagonal directions
+	int y = bg->offsetY; 
 	switch(d){
 	case up:
 	y = y-step<0?0:y-step;
@@ -235,10 +235,10 @@ void manage_time(game_clock *t,SDL_Renderer *renderer,TTF_Font *font){
 }
 //clear renderer and render the frame only once per frame and not on every pass
 void init_tutorial(SDL_Renderer *renderer,tutorial_piece *tutorialArr, int tut_count){
-	char path[30];
+	char path[50];
 	for (tutorial_piece *pT = tutorialArr;pT<tutorialArr+tut_count;pT++)
 	{
-		sprintf(path,"assets/images/tutorial%d.png",pT-tutorialArr);
+		sprintf(path,"../assets/images/tutorial%d.png",(int)(pT-tutorialArr));
 		SDL_Surface *s = IMG_Load(path);
 		if(!s){
 			printf("error creating surface @init_tutorial\n");
@@ -268,47 +268,64 @@ void save_score(ScoreInfo s,char* time, char* score_file){
 		return;
 	}
 }
-void input_name(SDL_Renderer *renderer,SDL_Event *e,char name_buff[],int len,TTF_Font *font){
-	display_name(renderer,font, name_buff);
-	if(e->type == SDL_TEXTINPUT){
-		snprintf(name_buff +strlen(name_buff),
-			len-strlen(name_buff),
-			"%s",e->text.text);
-	}//limiting input length to string size coz abdullah ben abdelaziz karawita might break the name thing
-	else if(e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_BACKSPACE && strlen(name_buff) >0)		
-		{
-			name_buff[strlen(name_buff)-1]='\0';
+int input_name(SDL_Renderer *renderer,SDL_Event *e,char name_buff[],int len_max,TTF_Font *font){
+	if (e->type == SDL_KEYDOWN) {
+
+	SDL_Keycode key = e->key.keysym.sym;
+	if ((key >= SDLK_a && key <= SDLK_z) ||
+	(key >= SDLK_0 && key <= SDLK_9)) {
+
+	int len = strlen(name_buff);
+	if (len < len_max - 1) {
+		name_buff[len] = (char)key;
+		name_buff[len + 1] = '\0';
 		}
-	else if(e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_RETURN){
+	}
+	else if (key == SDLK_SPACE) {
+	int len = strlen(name_buff);
+	if (len < len_max - 1) {
+		name_buff[len] = ' ';
+		name_buff[len + 1] = '\0';
+		}
+	}
+	else if (key == SDLK_BACKSPACE && strlen(name_buff) > 0) {
+		name_buff[strlen(name_buff) - 1] = '\0';
+		}
+
+	else if (key == SDLK_RETURN) {
 		ScoreInfo s;
-		strcpy(s.name,name_buff);
-		s.score = clk.elapsed; //will determine score calculation
-		save_score(s,clk.disp_clock,"saves/highscores.txt");
-		SDL_StopTextInput();
-		strcpy(name_buff,"");
-		current_menu = MENU_HIGHSCORES;
-	}		
+		strcpy(s.name, name_buff);
+		s.score = clk.elapsed;
+
+		save_score(s, clk.disp_clock, "../saves/highscores.txt");
+
+		strcpy(name_buff, "");
+		return 0;
+		}
+	}
+	return 1;
 }
 void display_name(SDL_Renderer *renderer, TTF_Font *font, char *name) {
-    SDL_Color color = {255, 255, 255, 255};
-    char display_text[20];
-    snprintf(display_text, sizeof(display_text), "Name: %s", name);
+	SDL_Color color = {255, 255, 255, 255};
+	char display_text[30];
+	snprintf(display_text, sizeof(display_text), "Name: %s", name);
 
-    SDL_Surface *surface = TTF_RenderText_Blended(font, display_text, color);
-    if (!surface) {
-        printf("Error creating text surface @display_name\n");
-        return;
-    }
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect dest = {(SCREEN_WIDTH-surface->w)/2, 50, surface->w, surface->h};
-    SDL_FreeSurface(surface);
+	SDL_Surface *surface = TTF_RenderText_Blended(font, display_text, color);
 
-    if (!texture) {
-        printf("Error creating text texture @display_name\n");
-        return;
-    }
-    SDL_RenderCopy(renderer, texture, NULL, &dest);
-    SDL_DestroyTexture(texture);
+	if (!surface) {
+		printf("error creating text surface @display_name\n");
+		return;
+	}
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_Rect dest = {(SCREEN_WIDTH-surface->w)/2, 50, surface->w, surface->h};
+	SDL_FreeSurface(surface);
+
+	if (!texture) {
+		printf("Error creating text texture @display_name\n");
+	return;
+	}
+	SDL_RenderCopy(renderer, texture, NULL, &dest);
+  	SDL_DestroyTexture(texture);
 }
 void clean_up_bg(Background *bg,tutorial_piece *tut,game_clock *clk,int player_count){
 	if(bg){
