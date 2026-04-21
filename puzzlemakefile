@@ -1,0 +1,11 @@
+prog: main.o puzzle.o
+	gcc main.o puzzle.o -o prog -lSDL2 -lSDL2_image -g
+
+main.o: main.c puzzle.h
+	gcc -c main.c -g
+
+puzzle.o: puzzle.c puzzle.h
+	gcc -c puzzle.c -g
+
+clean:
+	rm -f *.o prog
