@@ -202,8 +202,8 @@ SDL_Color get_pixel(SDL_Surface *surface, int x, int y){
 void interact(int x,int y,interactable * objects){
 for( interactable* it = objects; it<objects+OBJ_COUNT;it++){
 	if(!it->is_interactedwith){
-		int dist = sqrt(pow(x - it->position.x, 2) + pow(y - it->position.y, 2));
-		if(dist<INTERACT_RAD){
+		int dist =(x - it->position.x)*(x - it->position.x)+(y - it->position.y)*(y - it->position.y);
+		if(dist<INTERACT_RAD*INTERACT_RAD){
 			it->is_interactedwith = 1;
 			}
 		}

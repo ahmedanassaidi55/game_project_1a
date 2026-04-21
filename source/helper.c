@@ -254,31 +254,6 @@ void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y
 		}
 	}
 }
-//animation lors de changement de menu
-SDL_Texture *frames[11];
-void init_anim(SDL_Renderer *renderer){
-	char path[64];
-	for(int i = 10;i >=1;i--){
-		sprintf(path,"assets/frame_%02d.jpg",i);
-		frames[i] = IMG_LoadTexture(renderer,path);
-	}
-}
-/*void display_anim(SDL_Renderer *renderer){
-	for(int i = 10;i >=1;i--){
-		SDL_Event e;
-		while(SDL_PollEvent(&e)){
-			if(e.type == SDL_QUIT) exit(0);
-		}
-		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, frames[i],NULL,NULL);
-		SDL_RenderPresent(renderer);
-		SDL_Delay(30);
-	}
-}*/
-/*
-void play_menu(SDL_Renderer *renderer,TTF_Font *font){
-	
-}*/
 struct menu_t settings_menu_data;
 int settings_menu_init = 0;
 void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
