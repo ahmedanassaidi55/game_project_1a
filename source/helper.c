@@ -18,7 +18,7 @@ int init_game(){
         "PlaceholderName",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        600, 400,
+        600, 358,
         SDL_WINDOW_SHOWN
     	);
     	if (!window) {
@@ -48,7 +48,7 @@ int init_game(){
 	return 0;
 }
 void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
-	SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
+	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface.\n");
 		return;
@@ -68,7 +68,7 @@ void init_main_menu(SDL_Renderer *renderer, TTF_Font *font){
 	mainMenu.position.x = 0;
 	mainMenu.position.y = 0;
 	mainMenu.position.w = 600;
-	mainMenu.position.h = 400;
+	mainMenu.position.h = 358;
 	for(int i=0; i<5;i++){
 		SDL_Surface *button_surface=TTF_RenderText_Blended(font,
 				mainMenu.buttons[i].label,DARK_GREY);
@@ -231,11 +231,9 @@ void switch_menu(enum menu goto_menu,TTF_Font *font){
 		break;
 		case new_game:
 		printf("newgame\n");
-		current_menu = MENU_PLAY;
 		break;
 		case load_game:
 		printf("load\n");
-		current_menu = MENU_PLAY;
 		break;
 		default:
 			printf("  -> Unknown menu type\n");
@@ -259,7 +257,7 @@ void on_button_click_goto_menu(button *buttons,int count,int mouse_x,int mouse_y
 struct menu_t settings_menu_data;
 int settings_menu_init = 0;
 void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
-	SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
+	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface for highscores.\n");
 		return;
@@ -270,7 +268,7 @@ void init_settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 	settings_menu_data.position.x = 0;
 	settings_menu_data.position.y = 0;
 	settings_menu_data.position.w = 600;
-	settings_menu_data.position.h = 400;
+	settings_menu_data.position.h = 358;
 	strcpy(settings_menu_data.buttons[0].label,"back");
 	settings_menu_data.buttons[0].type_menu = back;
 	settings_menu_data.buttons[0].position.x = 390;
@@ -365,14 +363,14 @@ void settings_menu(SDL_Renderer *renderer,TTF_Font *font){
 struct menu_t save_menu_data;
 int save_menu_init = 0;
 void init_save_menu(SDL_Renderer *renderer,TTF_Font *font){
-	SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
+	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface for highscores.\n");
 		return;
 	}
 	save_menu_data.background = SDL_CreateTextureFromSurface(
 						renderer,temp_surf);
-	save_menu_data.position=(SDL_Rect){0,0,600,400};
+	save_menu_data.position=(SDL_Rect){0,0,600,358};
 	SDL_FreeSurface(temp_surf);
 	strcpy(save_menu_data.buttons[0].label,"New game");
 	save_menu_data.buttons[0].position.x = 110;
@@ -434,7 +432,7 @@ int highscores_menu_init = 0;
 Score highscores_list[6];
 //va etre remplacer par une propre fonction a trouver les scores
 void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
-	SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
+	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface for highscores.\n");
 		return;
@@ -444,7 +442,8 @@ void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 		printf("couldn't find highscores\n");
 	}
 	for(int i = 0;i<6;i++){
-	fscanf(f,"%d|%s|%s",&highscores_list[i].score,highscores_list[i].name,highscores_list[i].time);
+	fscanf(f,"%d|%s|%s",
+&highscores_list[i].score,highscores_list[i].name,highscores_list[i].time);
 	}
 	fclose(f);
 	highscores_menu_data.background = SDL_CreateTextureFromSurface(renderer, temp_surf);
@@ -452,7 +451,7 @@ void init_highscores_menu(SDL_Renderer *renderer, TTF_Font *font){
 	highscores_menu_data.position.x = 0;
 	highscores_menu_data.position.y = 0;
 	highscores_menu_data.position.w = 600;
-	highscores_menu_data.position.h = 400;
+	highscores_menu_data.position.h = 358;
 	
 	char buffer[100];
 	for (int i = 0; i < 6; i++) {
@@ -515,7 +514,7 @@ int character_mode = 0;           // 0 = none | 1 = mono | 2 = multi
 int character_avatar_choice = 0;  // 0 = none | 1 = avatar1 | 2 = avatar2
 
 void init_character_menu(SDL_Renderer *renderer, TTF_Font *font){
-	SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
+	SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
 	if(!temp_surf){
 		printf("error creating surface for character menu.\n");
 		return;
@@ -525,7 +524,7 @@ void init_character_menu(SDL_Renderer *renderer, TTF_Font *font){
 	character_menu_data.position.x = 0;
 	character_menu_data.position.y = 0;
 	character_menu_data.position.w = 600;
-	character_menu_data.position.h = 400;
+	character_menu_data.position.h = 358;
 	
 	strcpy(character_menu_data.buttons[0].label, "Singleplayer");
 	character_menu_data.buttons[0].type_menu = mono;
@@ -610,7 +609,7 @@ void character_menu(SDL_Renderer *renderer, TTF_Font *font){
 struct menu_t enigma_menu_data;
 int enigma_menu_init = 0;
 void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
-    SDL_Surface *temp_surf = IMG_Load("assets/images/frame_01.jpg");
+    SDL_Surface *temp_surf = IMG_Load("assets/frame_01.jpg");
     if(!temp_surf){
         printf("Error loading enigma background\n");
         return;
@@ -621,7 +620,7 @@ void init_enigma_menu(SDL_Renderer *renderer, TTF_Font *font){
     enigma_menu_data.position.x = 0;
     enigma_menu_data.position.y = 0;
     enigma_menu_data.position.w = 600;
-    enigma_menu_data.position.h = 400;
+    enigma_menu_data.position.h = 358;
 
     // Boutons Quiz et Puzzle
     strcpy(enigma_menu_data.buttons[0].label,"Quiz");

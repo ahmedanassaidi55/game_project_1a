@@ -9,9 +9,9 @@ void initEnemy(Enemy *e, SDL_Renderer *renderer)
     e->speed = 1.5;
     e->health = 100;
 
-    SDL_Surface *surf = IMG_Load("enemy.png");
+    SDL_Surface *surf = IMG_Load("assets/images/IMG_4446.jpg");
     if(!surf){
-        printf("Erreur chargement enemy.png\n");
+        printf("Erreur chargement assets/images/IMG_4446.jpg\n");
         return;
     }
 
@@ -33,7 +33,7 @@ void initEnemy(Enemy *e, SDL_Renderer *renderer)
 }
 
 /*================ IA =================*/
-void pathfindingSimple(Enemy *e, Player p)
+void pathfindingSimple(Enemy *e, EnemyTarget p)
 {
     if(p.x > e->x) e->x += e->speed;
     else e->x -= e->speed;
@@ -56,7 +56,7 @@ void animateEnemy(Enemy *e)
 }
 
 /*================ TIR =================*/
-void shootProjectile(Enemy *e, Player p)
+void shootProjectile(Enemy *e, EnemyTarget p)
 {
     for(int i=0;i<MAX_PROJECTILES;i++)
     {
@@ -64,19 +64,21 @@ void shootProjectile(Enemy *e, Player p)
         {
             Projectile *proj = &e->projectiles[i];
 
-            proj->x = e->x;
-            proj->y = e->y;
+            proj->x = e->x + (e->posScreen.w / 2.0f);
+            proj->y = e->y + (e->posScreen.h / 2.0f);
 
             float dx = p.x - e->x;
             float dy = p.y - e->y;
             float dist = sqrt(dx*dx + dy*dy);
             if(dist == 0) dist = 1;
 
-            proj->vx = (dx/dist) * 3.0;
-            proj->vy = (dy/dist) * 3.0;
+            proj->vx = (dx/dist) * PROJECTILE_SPEED;
+            proj->vy = (dy/dist) * PROJECTILE_SPEED;
 
-            proj->rect.w = 10;
-            proj->rect.h = 10;
+            proj->rect.w = 12;
+            proj->rect.h = 12;
+            proj->rect.x = (int)proj->x;
+            proj->rect.y = (int)proj->y;
 
             proj->active = 1;
             break;
@@ -97,8 +99,8 @@ void updateProjectiles(Enemy *e)
             e->projectiles[i].rect.x = (int)e->projectiles[i].x;
             e->projectiles[i].rect.y = (int)e->projectiles[i].y;
 
-            if(e->projectiles[i].x < 0 || e->projectiles[i].x > 800 ||
-               e->projectiles[i].y < 0 || e->projectiles[i].y > 600)
+            if(e->projectiles[i].x < 0 || e->projectiles[i].x > ENEMY_WORLD_W ||
+               e->projectiles[i].y < 0 || e->projectiles[i].y > ENEMY_WORLD_H)
             {
                 e->projectiles[i].active = 0;
             }

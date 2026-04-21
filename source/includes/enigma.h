@@ -1,9 +1,7 @@
-#ifndef ENIGME_H
-#define ENIGME_H
+#ifndef ENIGMA_H
+#define ENIGMA_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+#include "decl.h"
 
 typedef struct {
     char question[256];
@@ -28,8 +26,8 @@ void    create_quiz_textures(SDL_Renderer *renderer, TTF_Font *font);
 void    free_current_enigme(void);
 int     get_quiz_score(void);
 void    copy_quiz_score_to(int *score_var);
-void    handle_enigma_events(SDL_Event *event, SDL_Renderer *renderer, TTF_Font *font);
-void    enigma_menu(SDL_Renderer *renderer, TTF_Font *font, int mouse_x, int mouse_y);
-void    enigma_frame_update(SDL_Renderer *renderer, TTF_Font *font);
+void    handle_enigma_quiz_events(SDL_Event *event, SDL_Renderer *renderer, TTF_Font *font);
+void    enigma_quiz_menu(SDL_Renderer *renderer, TTF_Font *font, int mouse_x, int mouse_y);
+void    enigma_quiz_frame_update(SDL_Renderer *renderer, TTF_Font *font);
 
 #endif

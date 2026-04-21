@@ -9,7 +9,7 @@
 
 // حجم الشاشة
 #define SCREEN_W 600
-#define SCREEN_H 600
+#define SCREEN_H 400
 
 // -------- STRUCT --------
 // تمثل كل قطعة في اللعبة

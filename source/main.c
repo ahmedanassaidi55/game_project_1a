@@ -1,8 +1,14 @@
 #include "helper.h"
+#include "gameplay.h"
+#include <stdlib.h>
+#include <time.h>
 
 int main(){
 	TTF_Font *game_font = NULL;
 	SDL_Event event;
+	GameplaySession gameplay;
+	enum current_menu_state previous_menu = current_menu;
+	gameplay_session_reset(&gameplay);
 	if(init_game()){
 		return 1;
 	};
@@ -20,10 +26,15 @@ int main(){
 		}
 	Mix_Volume(-1,volume*13);
 	Mix_PlayChannel(-1,music,-1);
+	srand((unsigned int)time(NULL));
 	while (running){
 		while(SDL_PollEvent(&event)){
 			if(event.type == SDL_QUIT){
 				running = 0;
+			}
+			if(current_menu == MENU_PLAY &&
+				gameplay_handle_event(&gameplay, &event, renderer, game_font, &current_menu)){
+				continue;
 			}
 			if(event.type == SDL_MOUSEBUTTONDOWN){
 				switch(current_menu){
@@ -64,6 +75,8 @@ int main(){
 				if(event.key.keysym.sym == SDLK_ESCAPE){
 				if(current_menu == MENU_MAIN)
 				running = 0;
+				else if(current_menu == MENU_PLAY)
+				current_menu = MENU_MAIN;
 				}
 				if(event.key.keysym.sym == SDLK_j){
 					if(current_menu == MENU_MAIN)	
@@ -145,6 +158,11 @@ int main(){
 				character_menu(renderer, game_font);
 				break;
 			case MENU_PLAY:
+				if(gameplay_enter(&gameplay, renderer) != 0){
+					current_menu = MENU_MAIN;
+					break;
+				}
+				gameplay_frame(&gameplay, renderer, game_font, &current_menu);
 				break;
 			case MENU_SETTINGS:
 				settings_menu(renderer,game_font);
@@ -159,7 +177,12 @@ int main(){
 				main_menu(renderer, game_font);
 				break;
 		}
+		if(previous_menu == MENU_PLAY && current_menu != MENU_PLAY){
+			gameplay_leave(&gameplay);
+		}
+		previous_menu = current_menu;
 	}
+	gameplay_leave(&gameplay);
 	exit_game();
 	return 0;
 }

@@ -1,13 +1,10 @@
-/* enigme.c - menu + quiz arrondi, timer, musique vrai/faux */
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+/* enigma.c - menu + quiz arrondi, timer, musique vrai/faux */
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "enigme.h"
+#include "enigma.h"
 
 extern int quiz_active;
 
@@ -238,26 +235,20 @@ static void load_answer_music(void) {
     }
     s_music_loaded = 1;
 
-    s_music_true = Mix_LoadMUS("asset/true.weba");
+    s_music_true = Mix_LoadMUS("assets/audio/true.weba");
     if (!s_music_true) {
-        s_music_true = Mix_LoadMUS("assets/true.weba");
+        s_music_true = Mix_LoadMUS("assets/audio/true.mp3");
     }
     if (!s_music_true) {
-        s_music_true = Mix_LoadMUS("asset/true.mp3");
-    }
-    if (!s_music_true) {
-        s_music_true = Mix_LoadMUS("assets/true.mp3");
+        s_music_true = Mix_LoadMUS("assets/audio/true.wav");
     }
 
-    s_music_false = Mix_LoadMUS("asset/false.weba");
+    s_music_false = Mix_LoadMUS("assets/audio/false.weba");
     if (!s_music_false) {
-        s_music_false = Mix_LoadMUS("assets/false.weba");
+        s_music_false = Mix_LoadMUS("assets/audio/false.mp3");
     }
     if (!s_music_false) {
-        s_music_false = Mix_LoadMUS("asset/false.mp3");
-    }
-    if (!s_music_false) {
-        s_music_false = Mix_LoadMUS("assets/false.mp3");
+        s_music_false = Mix_LoadMUS("assets/audio/false.wav");
     }
 
     if (!s_music_true) {
@@ -299,7 +290,7 @@ static void quiz_finish_session(SDL_Renderer *renderer, TTF_Font *font) {
 }
 
 static void quiz_next_question(SDL_Renderer *renderer, TTF_Font *font) {
-    current_enigme = generer_enigme("assets/enigmes.txt");
+    current_enigme = generer_enigme("saves/enigmes.txt");
     if (current_enigme) {
         create_quiz_textures(renderer, font);
         reset_question_timer();
@@ -338,7 +329,7 @@ static void quiz_after_choice(SDL_Renderer *renderer, TTF_Font *font, int choice
     }
 }
 
-void enigma_frame_update(SDL_Renderer *renderer, TTF_Font *font) {
+void enigma_quiz_frame_update(SDL_Renderer *renderer, TTF_Font *font) {
     if (!quiz_active || !current_enigme) {
         return;
     }
@@ -350,18 +341,18 @@ void enigma_frame_update(SDL_Renderer *renderer, TTF_Font *font) {
 
 /* Panneau quiz: meme valeurs que le rendu */
 #define PANEL_X 50
-#define PANEL_Y 70
-#define PANEL_W 700
-#define PANEL_H 460
-#define PANEL_R 28
+#define PANEL_Y 20
+#define PANEL_W 500
+#define PANEL_H 360
+#define PANEL_R 20
 
 static void get_answer_rects(SDL_Rect out[3]) {
-    int bw = 200;
-    int bh = 46;
-    int gap = 18;
+    int bw = 150;
+    int bh = 40;
+    int gap = 12;
     int total = 3 * bw + 2 * gap;
-    int start_x = (800 - total) / 2;
-    int y = PANEL_Y + 300;
+    int start_x = (600 - total) / 2;
+    int y = PANEL_Y + 250;
     for (int i = 0; i < 3; i++) {
         out[i] = (SDL_Rect){start_x + i * (bw + gap), y, bw, bh};
     }
@@ -371,7 +362,7 @@ static int point_in_round_rect(int px, int py, SDL_Rect r) {
     return px >= r.x && px < r.x + r.w && py >= r.y && py < r.y + r.h;
 }
 
-void handle_enigma_events(SDL_Event *event, SDL_Renderer *renderer, TTF_Font *font) {
+void handle_enigma_quiz_events(SDL_Event *event, SDL_Renderer *renderer, TTF_Font *font) {
     if (event->type == SDL_MOUSEBUTTONDOWN && event->button.button == SDL_BUTTON_LEFT) {
         int x = event->button.x;
         int y = event->button.y;
@@ -389,7 +380,7 @@ void handle_enigma_events(SDL_Event *event, SDL_Renderer *renderer, TTF_Font *fo
         }
 
         /* menu: bouton lancer */
-        SDL_Rect start = {300, 268, 200, 52};
+        SDL_Rect start = {200, 268, 200, 52};
         if (point_in_round_rect(x, y, start)) {
             quiz_correct_count = 0;
             quiz_answered_count = 0;
@@ -422,7 +413,7 @@ static void draw_text_center(SDL_Renderer *r, TTF_Font *font, const char *txt, i
     SDL_DestroyTexture(t);
 }
 
-void enigma_menu(SDL_Renderer *renderer, TTF_Font *font, int mouse_x, int mouse_y) {
+void enigma_quiz_menu(SDL_Renderer *renderer, TTF_Font *font, int mouse_x, int mouse_y) {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     if (!quiz_active) {
@@ -432,9 +423,9 @@ void enigma_menu(SDL_Renderer *renderer, TTF_Font *font, int mouse_x, int mouse_
         fill_round_rect(renderer, panel, 24, panel_bg);
         stroke_round_rect(renderer, panel, 24, panel_bd);
 
-        draw_text_center(renderer, font, "Mini-quiz (projet SDL)", 400, 175, (SDL_Color){240, 245, 255, 255});
-        draw_text_center(renderer, font, "2 bonnes reponses sur 3 pour gagner", 400, 215, (SDL_Color){200, 205, 220, 255});
-        draw_text_center(renderer, font, "Chrono par question", 400, 245, (SDL_Color){200, 205, 220, 255});
+        draw_text_center(renderer, font, "Mini-quiz (projet SDL)", 300, 175, (SDL_Color){240, 245, 255, 255});
+        draw_text_center(renderer, font, "2 bonnes reponses sur 3 pour gagner", 300, 215, (SDL_Color){200, 205, 220, 255});
+        draw_text_center(renderer, font, "Chrono par question", 300, 245, (SDL_Color){200, 205, 220, 255});
 
         SDL_Rect start = {300, 268, 200, 52};
         int hover = point_in_round_rect(mouse_x, mouse_y, start);
@@ -464,7 +455,7 @@ void enigma_menu(SDL_Renderer *renderer, TTF_Font *font, int mouse_x, int mouse_
 
     char prog[48];
     snprintf(prog, sizeof(prog), "Question %d / %d", quiz_answered_count + 1, QUIZ_TOTAL_QUESTIONS);
-    draw_text_center(renderer, font, prog, 400, PANEL_Y + 36, (SDL_Color){200, 210, 230, 255});
+    draw_text_center(renderer, font, prog, 300, PANEL_Y + 36, (SDL_Color){200, 210, 230, 255});
 
     /* question */
     int qx = PANEL_X + 40;

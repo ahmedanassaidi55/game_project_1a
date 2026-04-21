@@ -63,7 +63,7 @@
 #define VITESSE_COURSE   8
 #define NB_VIES_INIT     3
 #define SCORE_INIT       0
-#define SOL_Y            380   /**< Y du sol (en pixels, haut du sprite)   */
+#define SOL_Y            304   /**< Y du sol (en pixels, haut du sprite)   */
 
 /* =====================================================================
  *  ÉTATS D'ANIMATION

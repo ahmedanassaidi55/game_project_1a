@@ -14,7 +14,15 @@ LDFLAGS := $(PKG_LIBS) -lm
 
 SOURCES := \
 	$(SRC_DIR)/main.c \
-	$(IMPL_DIR)/helper.c
+	$(IMPL_DIR)/helper.c \
+	$(IMPL_DIR)/background.c \
+	$(IMPL_DIR)/enigma.c \
+	$(IMPL_DIR)/game.c \
+	$(IMPL_DIR)/gameplay.c \
+	$(IMPL_DIR)/joueur.c \
+	$(IMPL_DIR)/ennemi.c \
+	$(IMPL_DIR)/minimap_game.c \
+	$(IMPL_DIR)/Puzzle.c
 OBJECTS := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SOURCES))
 
 .PHONY: all clean

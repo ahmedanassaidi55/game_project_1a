@@ -4,6 +4,24 @@ game_clock clk;
 int background_init=0;
 Background *bg = NULL;
 
+static int clamp_i(int value, int min_value, int max_value){
+	if(value < min_value) return min_value;
+	if(value > max_value) return max_value;
+	return value;
+}
+
+void center_background_on_player(Background *bg, int player_world_x, int player_world_y, int view_width, int view_height){
+	if(!bg){
+		return;
+	}
+	int max_x = BACKGROUND_WIDTH - view_width;
+	int max_y = BACKGROUND_HEIGHT - view_height;
+	if(max_x < 0) max_x = 0;
+	if(max_y < 0) max_y = 0;
+	bg->offsetX = clamp_i(player_world_x - (view_width / 2), 0, max_x);
+	bg->offsetY = clamp_i(player_world_y - (view_height / 2), 0, max_y);
+}
+
 Background* init_background(SDL_Renderer *renderer,int player_count){
 	bg = (Background*)malloc(sizeof(Background)*player_count);
 	if(!bg){
@@ -40,8 +58,17 @@ Background* init_background(SDL_Renderer *renderer,int player_count){
 	for(Background* pB =bg;pB<bg+player_count;pB++){
 		rewind(f);
 		pB->texture = bgtexture;
-		pB->offsetX=0;
-		pB->offsetY=0;
+		pB->bg_collision_map = surface_coll;
+		/* Initialize camera offsets from centered player world position. */
+		int centered_player_x = BACKGROUND_WIDTH / 2;
+		int centered_player_y = BACKGROUND_HEIGHT / 2;
+		center_background_on_player(
+			pB,
+			centered_player_x,
+			centered_player_y,
+			SCREEN_WIDTH / player_count,
+			SCREEN_HEIGHT
+		);
 		pB->position =(SDL_Rect){0,0,w,h};
 		
 		for(int i = 0; i < OBJ_COUNT; i++){
@@ -338,7 +365,11 @@ void clean_up_bg(Background *bg,tutorial_piece *tut,game_clock *clk,int player_c
 			}
 		if(bg && bg[0].texture){
 			SDL_DestroyTexture(bg[0].texture);
-			}
+		}
+		if(bg && bg[0].bg_collision_map){
+			SDL_FreeSurface(bg[0].bg_collision_map);
+			bg[0].bg_collision_map = NULL;
+		}
 		}
 	}
 	if(tut){

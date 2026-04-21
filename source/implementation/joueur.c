@@ -118,7 +118,7 @@ void initPerso(Personne *p, SDL_Renderer *r,
                const char *sprite, int numJoueur)
 {
     /* Positions initiales séparées */
-    p->x  = (numJoueur == 1) ? 100.0f : 600.0f;
+    p->x  = (numJoueur == 1) ? 100.0f : 450.0f;
     p->y  = (float)SOL_Y;
     p->vx = p->vy = 0.0f;
 
@@ -215,7 +215,7 @@ void gestionViesScores(Personne *p, SDL_Renderer *r, TTF_Font *font)
         dernVies[idx] = p->vies;
     }
 
-    int ox = (p->numJoueur == 1) ? 10 : 500;
+    int ox = (p->numJoueur == 1) ? 10 : 390;
     if (p->texScore) {
         SDL_Rect d = {ox, 10, 200, 30};
         SDL_RenderCopy(r, p->texScore, NULL, &d);
@@ -316,7 +316,7 @@ void deplacerPerso(Personne *p, const Uint8 *keys)
 
     /* Bornes horizontales de l'écran */
     if (p->x < 0) p->x = 0;
-    if (p->x > 800 - p->largeur) p->x = (float)(800 - p->largeur);
+    if (p->x > 600 - p->largeur) p->x = (float)(600 - p->largeur);
 
     /* Sol */
     if (p->y >= (float)SOL_Y) {
@@ -356,7 +356,7 @@ void detruirePerso(Personne *p)
 void initJoueur2(Personne *p2, SDL_Renderer *r, const char *sprite)
 {
     initPerso(p2, r, sprite, 2);
-    p2->x = 600.0f;
+    p2->x = 450.0f;
 }
 
 /* ------------------------------------------------------------------ */

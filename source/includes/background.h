@@ -48,6 +48,7 @@ extern game_clock clk;
 extern int background_init;
 //functions
 Background* init_background(SDL_Renderer *renderer,int player_count);
+void center_background_on_player(Background *bg, int player_world_x, int player_world_y, int view_width, int view_height);
 void display_background(Background* bg,SDL_Renderer *renderer,int player_count);
 void scroll_background(Background *bg, enum direction d, int step);
 int is_blocked(SDL_Surface* collision_map,int x, int y);
